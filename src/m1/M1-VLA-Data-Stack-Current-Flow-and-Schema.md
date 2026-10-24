@@ -265,3 +265,53 @@ Each one has my working assumption, so a short "yes" or a correction is enough. 
 **M2:** run your SDK on a ~100-episode test set from my data. Index it, run Flow 1 and Flow 2, build one curated revision, and write a short report: what worked, what broke, search quality, tag accuracy, gaps ranked by impact. Proposed: $300, about 1 week after SDK access.
 
 **Then:** iteration rounds as you update the SDK, each one a small milestone with a re-test report.
+
+
+
+
+
+
+
+## Comments:
+
+2. Training at 15 fps is fine, and plenty of VLA setups do it. I record at 30 because I can always downsample but can't go back up, and a grasp or drop happens within a few frames, so I'd rather keep the detail on disk. Downsampling is just an export option: take every 2nd row and use horizon 5 for the same 0.33 s, or keep 10 for 0.67 s. For your index, 15 fps or even lower is fine, as long as the hit times come back in t_ns so I can map them to frames.
+
+
+____________________________________
+
+How the labels (state) are computed ?
+do you use a simulator ?
+
+No simulator, it's all real robot data. State comes straight from the xArm controller over its ROS 2 driver at 100 Hz:
+
+
+
+* j1..j6: measured joint angles from the encoders (rad)
+* gripper: the gripper's position reading, normalized to 0 open .. 1 closed
+* ee_pose: the TCP pose the controller reports from its own kinematics
+
+
+
+At conversion I line them up with the scene camera. Joints are interpolated to each frame's timestamp, the gripper uses its last value, and a frame is dropped if there's no reading within ~16.7 ms.
+
+The action labels are the teleop commands the operator sent. For each frame I take the latest command at the time the image was captured.
+
+The only simulated data I use is the public LIBERO/AXIS sets, and they're kept separate from my robot data.
+
+
+_________________________________
+if the robot atcion is incorrect ----> Need to correct ?
+you do it manually steps by step and record it ----> train data ?
+
+Yes, but I don't edit the actions by hand frame by frame. That's too slow and it adds noise.
+There are two cases:
+1. Bad demo (my teleop was wrong): I cut the bad part or drop the episode, then record it again.
+2. The trained policy does the wrong action during testing: I stop it and take over with teleop from that point. I record the recovery (going back to a safe state and finishing the task) and tag it as a "correction" episode. Those go into the next training round.
+
+
+____________________________________
+Finding similar failures in old data is slow for me now, 
+and that's where your SDK would help a lot: search for one failure, find all the episodes like it.
+
+
+
