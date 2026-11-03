@@ -1,0 +1,25 @@
+{
+  "format_id": "xarm6_gripper_100hz",
+  "format_version": 1,
+  "description": "xArm 6 + gripper, /xarm/* + /teleop/joint_cmd at 100 Hz (00_doc.md 2a, 2e)",
+  "checked_by": "casey",
+  "checked_at": "2026-11-03",
+  "file": {"type": "jsonl", "header_line": "optional", "compression": ["none", "gzip"]},
+  "time": {"field": "t_ns", "dtype": "int64", "unit": "ns",
+           "time_base": "t_ns_utc_host_offset_corrected", "order": "strictly_increasing"},
+  "sampling": {"mode": "time", "rate_hz": 100, "rate_tol_pct": 10, "max_gap_ms": 20},
+  "fields": [
+    {"name": "q",           "dtype": "float", "shape": [6], "names": ["j1","j2","j3","j4","j5","j6"], "unit": "rad", "required": true, "range": [-6.3, 6.3]},
+    {"name": "current",     "dtype": "float", "shape": [6], "names": ["j1","j2","j3","j4","j5","j6"], "unit": "A",   "required": true, "note": "controller estimate"},
+    {"name": "gripper",     "dtype": "float", "shape": [],  "unit": "0_open_1_closed", "required": true, "range": [0, 1]},
+    {"name": "ee_pos",      "dtype": "float", "shape": [3], "names": ["x","y","z"], "unit": "m", "required": true},
+    {"name": "ee_quat",     "dtype": "float", "shape": [4], "names": ["qx","qy","qz","qw"], "unit": "quat_xyzw", "required": true, "check": "unit_norm"},
+    {"name": "cmd_q",       "dtype": "float", "shape": [6], "names": ["j1","j2","j3","j4","j5","j6"], "unit": "rad", "required": true, "role": "command"},
+    {"name": "cmd_gripper", "dtype": "float", "shape": [],  "unit": "0_open_1_closed", "required": true, "range": [0, 1], "role": "command"}
+  ],
+  "extra_fields": "reject",
+  "nan_policy": "reject",
+  "video_align": {"ref_camera": "cam_scene", "frame_tol_ms": 16.7, "cmd_max_age_ms": 20,
+                  "coverage": "full", "max_frames_no_telemetry": 0,
+                  "max_frames_cmd_stale": 0, "on_fail": "reject"}
+}

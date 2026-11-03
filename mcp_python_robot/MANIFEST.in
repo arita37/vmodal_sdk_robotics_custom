@@ -1,0 +1,7 @@
+include README.md pyproject.toml utils.py *.sh
+recursive-include src *.py *.mp4
+recursive-include tests *.py
+recursive-include skills *.md *.py *.sh
+recursive-include docs *.md *.json *.jsonl *.py
+recursive-include data *.md *.py *.json *.jsonl *.parquet *.mp4
+global-exclude __pycache__ *.pyc

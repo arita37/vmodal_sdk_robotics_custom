@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vmodal_mcp_robot"
+version = "0.2.0"
+description = "Robot episode and telemetry MCP server for VModal"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "vmodal>=1.0.0,<2.0.0",
+  "mcp>=1.2.0,<2.0.0",
+  "fire>=0.6.0",
+  "Pillow>=10.4.0",
+  "pyarrow>=14",
+  "filelock>=3.13",
+]
+
+[project.scripts]
+vmodal-mcp-robot = "src.mcp_server.main_mcp:cli"
+
+[tool.setuptools]
+packages = [
+  "src",
+  "src.utils",
+  "src.mcp_server",
+]
+
+[tool.setuptools.package-dir]
+src = "src"
+"src.utils" = "src/utils"
+"src.mcp_server" = "src/mcp_server"
+
+[tool.setuptools.package-data]
+"src.mcp_server" = ["assets/*.mp4"]
