@@ -57,10 +57,11 @@ to `sdk_python` first (repo coupling rule), then MCP mirrors it.
 - `image_download_from_records`: 1..20 records -> JPEG at
   `{root}/{collection}/{stream}/{stem}_{ts13}.jpg`. Only indexed frames exist.
 - Indexed frames observed on whole seconds, about 1 frame per second, with gaps
-  (vmodal-incident reference, dashcam test 2026-10-13). A drop that lasts a few frames can fall
+  (historical dashcam test 2026-10-13). A drop that lasts a few frames can fall
   between two indexed frames.
-- Skills `vmodal-find` (verify on frames), `vmodal-track` (image-anchor search),
-  `vmodal-incident` (event catalog, triage sheets, timeline rebuild). The new skill reuses them.
+- Included skills: `vmodal-find` (verify on frames) and `vmodal-robot-similar`
+  (failure catalog, telemetry scans and candidate tags). Review returned scene/wrist frames
+  directly; this checkout does not include a contact-sheet helper.
 
 
 ## Critical invariant
@@ -542,6 +543,8 @@ Steps (single episode):
 9. Upload the C4 metadata row (incl. format + check summary) with
    `collection_upload_metadata(mode=vid_file)`.
 10. Write/update the C5 manifest line; optionally `index_create` after the bulk run.
+    Run one index job per collection at a time: wait for `index_status` success before
+    starting the next camera index. Overlapping jobs return HTTP 409.
 Any failure in 7-9 marks the episode `partial` in the manifest; the next run re-uploads it
 (invariant 8: video and telemetry together or not at all from the user's view).
 
@@ -639,7 +642,7 @@ Steps:
    signature: visual (2-4 things seen, e.g. "gripper closed, cup still on table") and
    telemetry (rule from the catalog, e.g. "gripper reaches > 0.95 within 0.5 s of close
    command" = grasp miss). Show both to the user before searching.
-2. **Search wide, in parallel** (`robot_find`, limit 50, pages as vmodal-incident):
+2. **Search wide, in parallel** (`robot_find`, limit 50, max_pages 10):
    image search with the anchor scene frame; image search with the wrist frame (stream
    `cam_wrist`; often more telling for grasps); the catalog text phrases for the type; one
    user-phrased text query.
@@ -657,7 +660,7 @@ Steps:
    window resampled to fixed length, z-scored per field with stats from the scanned set).
    Keep visual relevance and detector confidence as separate columns; do not merge them into
    one "probability".
-5. **Triage** in batches of 10 with contact sheets (`vmodal-incident/scripts/frames_strip.sh`):
+5. **Triage** in batches of 10 by inspecting returned `robot_retrieve` image paths directly:
    for each candidate show the scene frame at the window peak + wrist frame. PASS / PARTIAL /
    FAIL against the catalog visual rule. Stop after two batches without a new PASS, or 40
    candidates, and say which rule stopped it.
@@ -665,7 +668,7 @@ Steps:
    `relevance` = fused score, `confidence` = detector confidence when the telemetry rule fired,
    else null. FAIL rows are not written. Nothing is marked accepted.
 7. **Report** (markdown): anchor + signature, searches run, `n_scanned` / `n_total`
-   episodes, table episode | window | verdict | relevance | detector, contact sheet paths,
+   episodes, table episode | window | verdict | relevance | detector, reviewed frame paths,
    tag file path, and the follow-up the reviewer must do (accept/reject in batches, then
    snapshot a `tag_rev` before Flow 2).
 
@@ -706,8 +709,8 @@ Thresholds are per robot in reference.md and recorded in `tagger_version`.
 
 - Same skill, mode "tag from text": `robot_find` -> windows -> C8 rows with `min_relevance`,
   no anchor needed (00_doc.md Flow 1).
-- Review sheet: sorted by relevance, contact sheet per batch, reviewer answers accept / reject /
-  correct per tile; the skill writes human rows with `supersedes=<tag_id>` (human decision,
+- Review queue: sorted by relevance, scene/wrist frame paths per candidate, reviewer answers
+  accept / reject / correct per candidate; the skill writes human rows with `supersedes=<tag_id>` (human decision,
   so `source=human`, `tagger=<reviewer>`).
 
 

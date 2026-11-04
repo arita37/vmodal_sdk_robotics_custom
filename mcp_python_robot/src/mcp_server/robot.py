@@ -5,6 +5,9 @@ import os,sys
 import fire
 from src.utils.util_log import log_info, log_error, log_trace, log_warning
 import bisect
+import inspect
+import shutil
+import tempfile
 import math
 import statistics
 import uuid
@@ -31,6 +34,39 @@ def manifest_save(cfg, collection_name, row):
         rows = [r for r in manifest_read(cfg,collection_name) if r["episode_uid"] != row["episode_uid"]]
         os_json_write(folder/"episodes.jsonl", rows+[row], lines=True)
         os_json_write(Path(row["telemetry_ref"]).parent/"episode.json", row)
+
+
+async def video_upload(client, filepath_local, collection_name, camera, episode_uid):
+    """Keep episode filenames and original frames with old and new vmodal SDKs.
+
+    Public SDK 1.0.0 derives the remote name from the local basename and does
+    not resize. Newer SDKs expose video_filename and reduce_size. Inspect before
+    calling rather than retrying TypeError, which could repeat a partial upload.
+    """
+    upload = client.collections.video_upload
+    parameters = inspect.signature(upload).parameters
+    arbitrary_keywords = any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values())
+
+    def supports(name):
+        return arbitrary_keywords or (name in parameters and parameters[name].kind in
+            (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY))
+
+    kwargs = {"collection_name": collection_name, "sub_collection_name": camera}
+    if supports("reduce_size"):
+        kwargs["reduce_size"] = False
+    filename = str_robot_key(episode_uid) + ".mp4"
+    if supports("video_filename"):
+        return await upload(filepath_local=filepath_local, video_filename=filename, **kwargs)
+    # Keep the alias alive until the awaited upload completes. Use a unique
+    # directory per call so parallel episodes/cameras cannot overwrite it.
+    with tempfile.TemporaryDirectory(prefix="vmodal-robot-upload-") as temporary:
+        alias = Path(temporary) / filename
+        try:
+            os.link(filepath_local, alias)
+        except OSError:
+            # Temporary storage can be on another device or lack hard links.
+            shutil.copyfile(filepath_local, alias)
+        return await upload(filepath_local=str(alias), **kwargs)
 
 
 async def robot_episode_upload(cfg, collection_name: str, episode_uid: str, video_scene: str,
@@ -116,8 +152,7 @@ async def episode_upload(cfg, collection_name, episode_uid, video_scene, telemet
     manifest_save(cfg,collection_name,record)
     try:
         for cam,path in videos.items():
-            await client.collections.video_upload(filepath_local=path,collection_name=collection_name,
-                sub_collection_name=cam,video_filename=episode_uid+".mp4",reduce_size=False)
+            await video_upload(client,path,collection_name,cam,episode_uid)
         path = os_json_write(artifacts/"metadata.jsonl",[metadata],lines=True)
         for cam in videos:
             await client.collections.upload_metadata_jsonl(path=path,mode="vid_file",group_name=collection_name,stream_name=cam,allow_overlap=True)

@@ -131,11 +131,11 @@ reviewed tag snapshot before any training filter; these tools never remove datas
 
 `bash test.sh test` runs every offline test suite, including robot formats, upload/resume,
 LeRobot cuts, time conversion, retrieval, search pagination, planted events, signatures, tags,
-MCP schemas/stdio and the existing trend-radar tests. `bash test.sh live`, `live_mcp`, and
-`initial` are explicit authenticated network suites and fail on missing configuration.
+MCP schemas/stdio, the included telemetry-scan skill tests and checkout-reference checks.
+`bash test.sh live`, `live_mcp`, and `initial` are explicit authenticated network suites and fail on missing configuration.
 `bash test.sh robot_live` additionally exercises registered-format dry run/upload, metadata,
 index creation, robot search and indexed scene-image plus telemetry retrieval through stdio.
 Search filenames are preserved exactly when constructing image selectors; the backend can
 return a stem without the raw clip's `.mp4` extension.
-CI tests public/repository SDKs and builds checked release artifacts. No public destination
-is assumed. Real M2 ~100-episode recall/quality evaluation requires the customer's dataset.
+No CI release workflow is included in this checkout; use the local runner above.
+Real M2 ~100-episode recall/quality evaluation requires the customer's dataset.

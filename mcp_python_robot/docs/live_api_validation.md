@@ -20,7 +20,11 @@ changed it to `ep_demo1.mp4`, causing the indexed image lookup to miss. Retrieva
 the exact returned filename; explicit local points use the episode stem. The offline regression
 asserts the extensionless selector is unchanged. The complete robot live suite then passed.
 
-The new workflow was published from an isolated checkout based on GitHub `origin/dev`, keeping
+The historical workflow described below is not included in this checkout and cannot be
+dispatched here. Use the explicit `test.sh` commands above for local validation.
+
+At the time of this record, the workflow was published from an isolated checkout based on
+GitHub `origin/dev`, keeping
 the original diverged local branch and unrelated files unchanged. Workflow dispatch enables
 `run_live_tests=true` and includes all four suites. The customer M2 recall study still requires
 the real episode dataset; these synthetic fixtures validate contracts and handoff behavior.

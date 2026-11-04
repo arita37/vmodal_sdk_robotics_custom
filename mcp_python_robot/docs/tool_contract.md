@@ -106,6 +106,12 @@ a null version means resolution was delegated to the backend.
 Missing-index errors include `available_versions` and `attempted_versions` so
 callers can see which revisions failed.
 
+Index creation is serialized per collection, including across camera sub-collections.
+After `index_create`, poll the returned job with `index_status` until success before
+creating the next camera index. An overlapping job returns HTTP 409; inspect the active
+job rather than repeatedly submitting another job. Stop on failure and inspect its error.
+This restriction applies to index creation, not independent search calls.
+
 Example tool calls:
 
 ```text

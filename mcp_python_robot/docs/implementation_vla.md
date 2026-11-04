@@ -4,6 +4,9 @@ Implemented in the sibling `vmx_mobile` checkout: the robot MCP and reference wo
 moved out of `vmx_api`. The robot directory was already untracked when work began; unrelated
 untracked `.github/workflows/api_endpoint_docs.yml` was left alone.
 
+These are historical implementation notes from that checkout. The current checkout
+does not include the referenced CI workflows; run `bash test.sh test` locally instead.
+
 ## Delivered scope
 
 - P0: sample-driven drafts, validated immutable format registration, collection bindings,
