@@ -77,6 +77,30 @@ def test5():
     assert 'python utils.py sdk_version_sync --check=true' in workflow
 
 
+def test6():
+    """Cuts retain exact frame counts, zero-based timestamps, and 30 fps duration."""
+    import json
+    from pathlib import Path
+    from src.mcp_server.utils import os_video_cut, os_video_probe
+
+    source = Path("data/robot/lerobot/videos/observation.images.cam_scene/chunk-000/file-000.mp4")
+    for index, (start, length) in enumerate(((0, 60), (2, 60), (1 / 30, 17), (0, 1))):
+        target = Path(dirtest) / "video_cuts" / f"cut_{index}.mp4"
+        os_video_cut(source, target, start, length)
+        assert os_video_probe(target) == {"n_frames_decoded": length, "fps": 30.0, "cfr": True}
+        info = json.loads(subprocess.run([
+            "ffprobe", "-v", "error", "-select_streams", "v:0",
+            "-show_entries", "stream=start_time,duration:frame=best_effort_timestamp_time",
+            "-of", "json", str(target),
+        ], check=True, capture_output=True, text=True).stdout)
+        stream = info["streams"][0]
+        assert abs(float(stream["start_time"])) < 0.000001
+        assert abs(float(stream["duration"]) - length / 30) < 0.000001
+        assert len(info["frames"]) == length
+        for frame, row in enumerate(info["frames"]):
+            assert abs(float(row["best_effort_timestamp_time"]) - frame / 30) < 0.000001
+
+
 def test_all():
     os_path_cleanup(dirtest)
     test1()
@@ -84,6 +108,7 @@ def test_all():
     test3()
     test4()
     test5()
+    test6()
     log_info("test_utils: all passed")
 
 

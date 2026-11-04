@@ -38,6 +38,8 @@ mcp_test_unit() {
   ## Usage:
     bash test.sh test
   '
+  python -m unittest discover -s tests -p test_install.py
+  python -m unittest discover -s tests -p test_video_upload.py
   python tests/test_utils.py test_all
   python tests/test_main_mcp.py test_all
   python tests/test_cli.py test_all
@@ -46,7 +48,7 @@ mcp_test_unit() {
   python tests/test_robot_similar.py test_all
   python tests/test_robot_mcp.py test_all
   python skills/vmodal-robot-similar/tests/test_telemetry_scan.py test_all
-  python skills/vmodal-trend-radar/tests/test_trend_matrix.py test_all
+  python skills/vmodal-robot-similar/tests/test_checkout_contract.py
 }
 
 mcp_test_live() {

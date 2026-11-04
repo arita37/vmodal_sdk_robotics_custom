@@ -386,7 +386,8 @@ Each feature lists: problem (from the article), what it does, how it uses VModal
   index_version, rank bin). The tool gives the rank cut for a target precision. It can then set
   `confidence` = empirical precision with `confidence_source=calibration@{ver}`. This answers
   Casey Q2 from data, not from the score scale.
-- Output: queue sheet (contact sheets reuse `vmodal-incident/scripts/frames_strip.sh`) plus D7.
+- Output: queue sheet with returned scene/wrist frame paths for direct inspection, plus D7.
+  No contact-sheet helper is included in this checkout.
 
 ### Assembly
 
