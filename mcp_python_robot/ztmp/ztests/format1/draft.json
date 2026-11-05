@@ -1,0 +1,141 @@
+{
+  "checked_at": "?",
+  "checked_by": "?",
+  "extra_fields": "reject",
+  "fields": [
+    {
+      "dtype": "float",
+      "name": "q",
+      "names": [
+        "j1",
+        "j2",
+        "j3",
+        "j4",
+        "j5",
+        "j6"
+      ],
+      "range": "?",
+      "required": true,
+      "shape": [
+        6
+      ],
+      "unit": "rad"
+    },
+    {
+      "dtype": "float",
+      "name": "current",
+      "names": [
+        "j1",
+        "j2",
+        "j3",
+        "j4",
+        "j5",
+        "j6"
+      ],
+      "range": "?",
+      "required": true,
+      "shape": [
+        6
+      ],
+      "unit": "A"
+    },
+    {
+      "dtype": "float",
+      "name": "gripper",
+      "range": "?",
+      "required": true,
+      "shape": [],
+      "unit": "0_open_1_closed"
+    },
+    {
+      "dtype": "float",
+      "name": "ee_pos",
+      "names": [
+        "x",
+        "y",
+        "z"
+      ],
+      "range": "?",
+      "required": true,
+      "shape": [
+        3
+      ],
+      "unit": "m"
+    },
+    {
+      "dtype": "float",
+      "name": "ee_quat",
+      "names": [
+        "qx",
+        "qy",
+        "qz",
+        "qw"
+      ],
+      "range": "?",
+      "required": true,
+      "shape": [
+        4
+      ],
+      "unit": "?"
+    },
+    {
+      "dtype": "float",
+      "name": "cmd_q",
+      "names": [
+        "j1",
+        "j2",
+        "j3",
+        "j4",
+        "j5",
+        "j6"
+      ],
+      "range": "?",
+      "required": true,
+      "shape": [
+        6
+      ],
+      "unit": "rad"
+    },
+    {
+      "dtype": "float",
+      "name": "cmd_gripper",
+      "range": "?",
+      "required": true,
+      "shape": [],
+      "unit": "0_open_1_closed"
+    }
+  ],
+  "file": {
+    "compression": [
+      "none",
+      "gzip"
+    ],
+    "header_line": "optional",
+    "type": "jsonl"
+  },
+  "format_id": "?",
+  "format_version": 1,
+  "nan_policy": "reject",
+  "sampling": {
+    "max_gap_ms": "?",
+    "mode": "time",
+    "rate_hz": 100.0,
+    "rate_tol_pct": "?"
+  },
+  "time": {
+    "dtype": "int64",
+    "field": "t_ns",
+    "order": "strictly_increasing",
+    "time_base": "t_ns_utc_host_offset_corrected",
+    "unit": "ns"
+  },
+  "video_align": {
+    "cmd_max_age_ms": "?",
+    "coverage": "full",
+    "frame_tol_ms": "?",
+    "max_frames_cmd_stale": "?",
+    "max_frames_no_telemetry": "?",
+    "on_fail": "?",
+    "ref_camera": "cam_scene"
+  }
+}

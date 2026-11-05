@@ -1,0 +1,40 @@
+[
+ {
+  "uid": "take_10_broken",
+  "before": "reject",
+  "before_errors": 20,
+  "after": "reject",
+  "after_errors": 20,
+  "ops": {
+   "ee_quat.sign_flips_fixed": 328
+  },
+  "unrepaired": [
+   "gripper: 20 consecutive non-finite rows at t=1784581065557100000 (> max_nan_run 5)",
+   "gap 328.8 ms at t=1784581064156200000 (> max_interp_ms 150): split or drop the episode"
+  ],
+  "after_first_errors": [
+   "row 300 gripper: finite float required",
+   "row 301 gripper: finite float required",
+   "row 302 gripper: finite float required"
+  ]
+ },
+ {
+  "uid": "take_19_corrupt",
+  "before": "reject",
+  "before_errors": 57,
+  "after": "pass",
+  "after_errors": 0,
+  "ops": {
+   "reordered_steps": 12,
+   "dropped_duplicate_timestamps": 5,
+   "q.nonfinite_rows_filled": 3,
+   "ee_quat.renormalized_rows": 50,
+   "ee_quat.sign_flips_fixed": 483,
+   "cmd_gripper.clamped_values": 4,
+   "gaps_filled": 1,
+   "rows_inserted": 4
+  },
+  "unrepaired": [],
+  "after_first_errors": []
+ }
+]

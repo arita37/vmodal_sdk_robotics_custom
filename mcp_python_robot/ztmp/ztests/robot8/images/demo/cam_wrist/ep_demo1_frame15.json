@@ -1,0 +1,212 @@
+{
+  "dataset_rev": "r1",
+  "episode_index": 0,
+  "episode_uid": "ep_demo1",
+  "errors": [],
+  "frame_index": 15,
+  "image_source": "local_decode",
+  "image_sources": {
+    "cam_scene": "local_decode",
+    "cam_wrist": "local_decode"
+  },
+  "images": {
+    "cam_scene": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/ztests/robot8/images/demo/cam_scene/ep_demo1_frame15.jpg",
+    "cam_wrist": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/ztests/robot8/images/demo/cam_wrist/ep_demo1_frame15.jpg"
+  },
+  "index_version": null,
+  "state_at_t": {
+    "cmd_gripper": 1.0,
+    "cmd_q": {
+      "j1": 0.1,
+      "j2": 0.1,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    },
+    "current": {
+      "j1": 0.2,
+      "j2": 9.0,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    },
+    "ee_pos": {
+      "x": 0.05,
+      "y": 0.0,
+      "z": 0.2
+    },
+    "ee_quat": {
+      "qw": 1.0,
+      "qx": 0.0,
+      "qy": 0.0,
+      "qz": 0.0
+    },
+    "gripper": 0.99,
+    "q": {
+      "j1": 0.1,
+      "j2": 0.1,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    }
+  },
+  "sync": {
+    "cmd_age_ms_max": 9.949917,
+    "cmd_latency_ms": 0,
+    "n_dropped": 0,
+    "sync_offset_ms_max": 1.0,
+    "sync_offset_ms_mean": 0.5,
+    "wrist_dt_ms_max": 1.0,
+    "wrist_dt_ms_mean": 1.0
+  },
+  "t_ns": 1761130004502034725,
+  "t_scene_ns": 1761130004502034725,
+  "t_wrist_ns": 1761130004503034725,
+  "telemetry": {
+    "format": {
+      "fields": [
+        {
+          "dtype": "float",
+          "name": "q",
+          "names": [
+            "j1",
+            "j2",
+            "j3",
+            "j4",
+            "j5",
+            "j6"
+          ],
+          "range": [
+            -6.3,
+            6.3
+          ],
+          "required": true,
+          "shape": [
+            6
+          ],
+          "unit": "rad"
+        },
+        {
+          "dtype": "float",
+          "name": "current",
+          "names": [
+            "j1",
+            "j2",
+            "j3",
+            "j4",
+            "j5",
+            "j6"
+          ],
+          "note": "controller estimate",
+          "required": true,
+          "shape": [
+            6
+          ],
+          "unit": "A"
+        }
+      ],
+      "format_id": "xarm6_gripper_100hz",
+      "format_version": 1
+    },
+    "rate_hz": 20,
+    "rows": [
+      {
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004411200000
+      },
+      {
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004461200000
+      },
+      {
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004511200000
+      },
+      {
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004561200000
+      }
+    ],
+    "t_from_ns": 1761130004402034725,
+    "t_to_ns": 1761130004602034725
+  },
+  "telemetry_summary": {
+    "cmd_vs_state_gripper_max": 0.010000000000000009,
+    "current_abs_max": {
+      "j1": 0.2,
+      "j2": 9.0,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    },
+    "gripper_max": 0.99,
+    "gripper_min": 0.99,
+    "tcp_speed_max_mps": 0.10000000000000009
+  },
+  "wrist_dt_ms": 1.0,
+  "wrist_repeated": false
+}

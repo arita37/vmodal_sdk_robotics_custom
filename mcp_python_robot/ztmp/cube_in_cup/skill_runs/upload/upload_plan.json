@@ -1,0 +1,155 @@
+{
+ "collection": "cube_in_cup_raw_v2",
+ "dataset_rev": "bigenlight_cube_in_cup_raw_2026_07_20",
+ "episodes_dir": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/cube_in_cup/episodes_v2",
+ "format": "ur7e_gripper_raw_76hz@1",
+ "format_checked_by": "claude_draft_pending_user_review",
+ "created_at": "2026-11-05T01:04:42.007022+00:00",
+ "episodes": [
+  {
+   "uid": "take_01",
+   "sha": "6fe7820c517b6012219b4c0cec3c07bd8309e280a7b1fd51e76ebec75709c939",
+   "server_state": "validated",
+   "video_bytes": 7274128
+  },
+  {
+   "uid": "take_02",
+   "sha": "04ca3b0a5b096bd19696b0b1b0ffde9d341b4e74ad0d4d9ff6e6cb16c97a1c70",
+   "server_state": "validated",
+   "video_bytes": 7696398
+  },
+  {
+   "uid": "take_03",
+   "sha": "9f892751af481b581cfe0e95b6bc874e619487c7788ac7fef8c5ffb162e2d11f",
+   "server_state": "validated",
+   "video_bytes": 4883582
+  },
+  {
+   "uid": "take_05",
+   "sha": "95a4623d87d9ae698684b54da73e728adfc187124599a2526d69330820162714",
+   "server_state": "validated",
+   "video_bytes": 4431197
+  },
+  {
+   "uid": "take_07",
+   "sha": "02019a817aa300afd353a942ce676b1f6108fddaba8716b22ef5e6e3a3a9aaa0",
+   "server_state": "validated",
+   "video_bytes": 4139719
+  },
+  {
+   "uid": "take_08",
+   "sha": "2b4670d191d0472b47c1195dcb27210cc217715159c6dc05a0573691690e6607",
+   "server_state": "validated",
+   "video_bytes": 4010048
+  },
+  {
+   "uid": "take_09",
+   "sha": "ecbdf3b2abb33641bf1a5dfe78ac442e15e5a2c199535467bc2ae1c1d73896bf",
+   "server_state": "validated",
+   "video_bytes": 5300087
+  },
+  {
+   "uid": "take_10",
+   "sha": "aaadf5fd9d951e60e3234699b0ec8e5e6d1cd5e841df6769892a97b0673b7c90",
+   "server_state": "validated",
+   "video_bytes": 3370459
+  },
+  {
+   "uid": "take_11",
+   "sha": "6f9738c56608efff55dca3f64fe92f50f80b4b5d09a11440892632a1e6d83d90",
+   "server_state": "validated",
+   "video_bytes": 3714102
+  },
+  {
+   "uid": "take_12",
+   "sha": "c404bbb0adece24a3c7731358ebc0b1a96fc2ffc30b2b35b00328e3a30ba299a",
+   "server_state": "validated",
+   "video_bytes": 3413437
+  },
+  {
+   "uid": "take_13",
+   "sha": "5edfa3762ffd4238e0f60d71baee6b0dc619ef525093327fb764b70da834fe52",
+   "server_state": "validated",
+   "video_bytes": 4022316
+  },
+  {
+   "uid": "take_14",
+   "sha": "d7de0c307db738989940ad96936ded275e0da883f9bf88f5618852a16d40d796",
+   "server_state": "validated",
+   "video_bytes": 3543952
+  },
+  {
+   "uid": "take_15",
+   "sha": "d355c07527bb710acf7a19bf2ffac15576d5f6fa1ff999fa8c391ed6b4bc47bc",
+   "server_state": "validated",
+   "video_bytes": 3932515
+  },
+  {
+   "uid": "take_16",
+   "sha": "61d6ef159b28d1f678660942d1facb471020d0544726666f20ef1e773be31a00",
+   "server_state": "validated",
+   "video_bytes": 4224484
+  },
+  {
+   "uid": "take_17",
+   "sha": "f4581c44bb1085271742e28456ee8806076e347c59ca6b765c9767061539af71",
+   "server_state": "validated",
+   "video_bytes": 3942401
+  },
+  {
+   "uid": "take_18",
+   "sha": "82ecc8da29ca088de013b9fd8a55a0181362cdb21bcc6f8f45e564b6bc9f8c83",
+   "server_state": "validated",
+   "video_bytes": 3513172
+  },
+  {
+   "uid": "take_19",
+   "sha": "9993372a533400dad1ac925850f3cc82ba2dbca2a33501cc33ac1252673b8324",
+   "server_state": "validated",
+   "video_bytes": 3342774
+  },
+  {
+   "uid": "take_20",
+   "sha": "e2dd61788212af194bbdc4af76d5ce85bfd229b57b3bba38204827ac1b5cbe02",
+   "server_state": "validated",
+   "video_bytes": 4009214
+  },
+  {
+   "uid": "take_21",
+   "sha": "5ec356dfefd353d56c568ec3cb4b4eca6d6a61943c1f65dba304648bc611f533",
+   "server_state": "validated",
+   "video_bytes": 3889263
+  },
+  {
+   "uid": "take_22",
+   "sha": "cc258480cdb5ab1a33fe22ccdf3312f1d1149d0f26ecef035d513267877b02f2",
+   "server_state": "validated",
+   "video_bytes": 3716882
+  },
+  {
+   "uid": "take_24",
+   "sha": "6137f41cc8207ebf4a3adc3dacc2759989b4e13fc1b9f99084c50a63d7eb3dfa",
+   "server_state": "validated",
+   "video_bytes": 4016479
+  },
+  {
+   "uid": "take_25",
+   "sha": "0777b540094e04044b8dc318b4621a6e1e04d11d1447de8dcf3c27d68b4ada76",
+   "server_state": "validated",
+   "video_bytes": 4204831
+  },
+  {
+   "uid": "take_26",
+   "sha": "29655321ee2cf4809a27397a0b4392ed7ec327af61a63faa229f29ce08790fb6",
+   "server_state": "validated",
+   "video_bytes": 3659258
+  }
+ ],
+ "blocked": [
+  [
+   "take_23",
+   "excluded by review"
+  ]
+ ],
+ "video_bytes": 98250698
+}

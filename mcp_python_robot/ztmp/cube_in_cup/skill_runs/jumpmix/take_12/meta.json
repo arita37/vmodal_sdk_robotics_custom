@@ -1,0 +1,18 @@
+{
+ "episode_uid": "take_12",
+ "length": 220,
+ "duration_s": 7.333,
+ "task": "put the cube in the cup",
+ "success": true,
+ "success_source": "dataset card: take_23 is a recording misfire, others are successful demos",
+ "robot_id": "ur7e_gello",
+ "operator_id": "bigenlight_op1",
+ "start_time": "2026-07-20T20:58:35Z",
+ "start_time_note": "from take folder name; time zone unknown, treated as UTC",
+ "source_dataset": "Bigenlight/cube_in_cup_raw",
+ "source_take": "take_12_20260720_205835",
+ "n_dropped": 0,
+ "cmd_latency_ms": 0,
+ "sync_offset_ms_max": 23.7,
+ "sync_offset_ms_mean": 14.957
+}

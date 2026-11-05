@@ -1,0 +1,8 @@
+{
+  "cameras": [
+    "cam_scene",
+    "cam_wrist"
+  ],
+  "fps": 30,
+  "telemetry_format": "xarm6_gripper_100hz@1"
+}

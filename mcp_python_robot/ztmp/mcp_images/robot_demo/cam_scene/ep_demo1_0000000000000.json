@@ -1,0 +1,607 @@
+{
+  "dataset_rev": "r1",
+  "episode_index": 0,
+  "episode_uid": "ep_demo1",
+  "errors": [],
+  "frame_index": 0,
+  "image_source": "vmodal_index",
+  "image_sources": {
+    "cam_scene": "vmodal_index",
+    "cam_wrist": "vmodal_index"
+  },
+  "images": {
+    "cam_scene": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/mcp_images/robot_demo/cam_scene/ep_demo1_0000000000000.jpg",
+    "cam_wrist": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/mcp_images/robot_demo/cam_wrist/ep_demo1_0000000000000.jpg"
+  },
+  "index_version": 1,
+  "state_at_t": {
+    "cmd_gripper": 0.0,
+    "cmd_q": {
+      "j1": 0.1,
+      "j2": 0.1,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    },
+    "current": {
+      "j1": 0.2,
+      "j2": 0.3,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    },
+    "ee_pos": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.2
+    },
+    "ee_quat": {
+      "qw": 1.0,
+      "qx": 0.0,
+      "qy": 0.0,
+      "qz": 0.0
+    },
+    "gripper": 0.0,
+    "q": {
+      "j1": 0.1,
+      "j2": 0.1,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    }
+  },
+  "sync": {
+    "cmd_age_ms_max": 9.949917,
+    "cmd_latency_ms": 0,
+    "n_dropped": 0,
+    "sync_offset_ms_max": 1.0,
+    "sync_offset_ms_mean": 0.5,
+    "wrist_dt_ms_max": 1.0,
+    "wrist_dt_ms_mean": 1.0
+  },
+  "t_ns": 1761130004001200000,
+  "t_scene_ns": 1761130004001200000,
+  "t_wrist_ns": 1761130004002200000,
+  "telemetry": {
+    "format": {
+      "fields": [
+        {
+          "dtype": "float",
+          "name": "q",
+          "names": [
+            "j1",
+            "j2",
+            "j3",
+            "j4",
+            "j5",
+            "j6"
+          ],
+          "range": [
+            -6.3,
+            6.3
+          ],
+          "required": true,
+          "shape": [
+            6
+          ],
+          "unit": "rad"
+        },
+        {
+          "dtype": "float",
+          "name": "current",
+          "names": [
+            "j1",
+            "j2",
+            "j3",
+            "j4",
+            "j5",
+            "j6"
+          ],
+          "note": "controller estimate",
+          "required": true,
+          "shape": [
+            6
+          ],
+          "unit": "A"
+        },
+        {
+          "dtype": "float",
+          "name": "gripper",
+          "range": [
+            0,
+            1
+          ],
+          "required": true,
+          "shape": [],
+          "unit": "0_open_1_closed"
+        },
+        {
+          "dtype": "float",
+          "name": "ee_pos",
+          "names": [
+            "x",
+            "y",
+            "z"
+          ],
+          "required": true,
+          "shape": [
+            3
+          ],
+          "unit": "m"
+        },
+        {
+          "check": "unit_norm",
+          "dtype": "float",
+          "name": "ee_quat",
+          "names": [
+            "qx",
+            "qy",
+            "qz",
+            "qw"
+          ],
+          "required": true,
+          "shape": [
+            4
+          ],
+          "unit": "quat_xyzw"
+        },
+        {
+          "dtype": "float",
+          "name": "cmd_q",
+          "names": [
+            "j1",
+            "j2",
+            "j3",
+            "j4",
+            "j5",
+            "j6"
+          ],
+          "required": true,
+          "role": "command",
+          "shape": [
+            6
+          ],
+          "unit": "rad"
+        },
+        {
+          "dtype": "float",
+          "name": "cmd_gripper",
+          "range": [
+            0,
+            1
+          ],
+          "required": true,
+          "role": "command",
+          "shape": [],
+          "unit": "0_open_1_closed"
+        }
+      ],
+      "format_id": "xarm6_gripper_100hz",
+      "format_version": 1
+    },
+    "rate_hz": 100,
+    "rows": [
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.0,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004001200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.001,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004011200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.002,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004021200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.003,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004031200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.004,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004041200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.005,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004051200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.006,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004061200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.007,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004071200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.008,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004081200000
+      },
+      {
+        "cmd_gripper": 0.0,
+        "cmd_q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "current": [
+          0.2,
+          0.3,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "ee_pos": [
+          0.009000000000000001,
+          0.0,
+          0.2
+        ],
+        "ee_quat": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "gripper": 0.0,
+        "q": [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        "t_ns": 1761130004091200000
+      }
+    ],
+    "t_from_ns": 1761130003901200000,
+    "t_to_ns": 1761130004101200000
+  },
+  "telemetry_summary": {
+    "cmd_vs_state_gripper_max": 0.0,
+    "current_abs_max": {
+      "j1": 0.2,
+      "j2": 0.3,
+      "j3": 0.1,
+      "j4": 0.1,
+      "j5": 0.1,
+      "j6": 0.1
+    },
+    "gripper_max": 0.0,
+    "gripper_min": 0.0,
+    "tcp_speed_max_mps": 0.10000000000000009
+  },
+  "wrist_dt_ms": 1.0,
+  "wrist_repeated": false
+}

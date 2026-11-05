@@ -1,0 +1,129 @@
+{
+ "checked_at": "?",
+ "checked_by": "?",
+ "extra_fields": "reject",
+ "fields": [
+  {
+   "dtype": "float",
+   "name": "q",
+   "range": [
+    -4.4508,
+    3.9394
+   ],
+   "required": true,
+   "shape": [
+    6
+   ],
+   "unit": "?"
+  },
+  {
+   "dtype": "float",
+   "name": "current",
+   "range": [
+    -8.3721,
+    7.0903
+   ],
+   "required": true,
+   "shape": [
+    6
+   ],
+   "unit": "?"
+  },
+  {
+   "dtype": "float",
+   "name": "gripper",
+   "range": [
+    -0.0502,
+    0.6934
+   ],
+   "required": true,
+   "shape": [],
+   "unit": "?"
+  },
+  {
+   "dtype": "float",
+   "name": "ee_pos",
+   "range": [
+    -0.2198,
+    0.6717
+   ],
+   "required": true,
+   "shape": [
+    3
+   ],
+   "unit": "?"
+  },
+  {
+   "dtype": "float",
+   "name": "ee_quat",
+   "range": [
+    -0.9478,
+    0.9939
+   ],
+   "required": true,
+   "shape": [
+    4
+   ],
+   "unit": "?"
+  },
+  {
+   "dtype": "float",
+   "name": "cmd_q",
+   "range": [
+    -4.4509,
+    3.9386
+   ],
+   "required": true,
+   "shape": [
+    6
+   ],
+   "unit": "?",
+   "role": "command"
+  },
+  {
+   "dtype": "float",
+   "name": "cmd_gripper",
+   "range": [
+    -0.1,
+    1.0998
+   ],
+   "required": true,
+   "shape": [],
+   "unit": "?",
+   "role": "command"
+  }
+ ],
+ "file": {
+  "compression": [
+   "none",
+   "gzip"
+  ],
+  "header_line": "optional",
+  "type": "jsonl"
+ },
+ "format_id": "?",
+ "format_version": 1,
+ "nan_policy": "reject",
+ "sampling": {
+  "max_gap_ms": 70,
+  "mode": "time",
+  "rate_hz": 74.07407407407408,
+  "rate_tol_pct": 10
+ },
+ "time": {
+  "dtype": "int64",
+  "field": "t_ns",
+  "order": "strictly_increasing",
+  "time_base": "?",
+  "unit": "ns"
+ },
+ "video_align": {
+  "cmd_max_age_ms": "?",
+  "coverage": "full",
+  "frame_tol_ms": "?",
+  "max_frames_cmd_stale": "?",
+  "max_frames_no_telemetry": "?",
+  "on_fail": "?",
+  "ref_camera": "cam_scene"
+ }
+}

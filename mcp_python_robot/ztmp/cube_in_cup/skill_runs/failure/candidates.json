@@ -1,0 +1,121 @@
+{
+ "detector": "failure_screen_v1",
+ "thresholds": {
+  "cmd_field": "cmd_gripper",
+  "state_field": "gripper",
+  "pos_field": "ee_pos",
+  "cmd_close_above": 0.5,
+  "state_delta": 0.05,
+  "min_duration_s": 2.0,
+  "short_frac": 0.4,
+  "low_motion_frac": 0.25,
+  "idle_speed_mps": 0.01,
+  "idle_frac": 0.5,
+  "end_pose_min_m": 0.05,
+  "end_pose_mad_k": 4.0,
+  "grip_width_z": 3.5,
+  "duration_z": 3.5,
+  "release_window_s": 0.5,
+  "release_delay_s": 1.0
+ },
+ "thresholds_sha": "ee829330c858",
+ "gripper_polarity": "state increases when closing",
+ "candidates": [
+  {
+   "episode_uid": "take_01",
+   "rule": "duration_outlier",
+   "severity": "low",
+   "evidence": "16.80 s, robust z +7.2",
+   "t_start_ns": 1784580727037299968,
+   "t_end_ns": 1784580743831899904,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_02",
+   "rule": "duration_outlier",
+   "severity": "low",
+   "evidence": "16.40 s, robust z +6.9",
+   "t_start_ns": 1784580850010899968,
+   "t_end_ns": 1784580866441999872,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_09",
+   "rule": "slow_or_stuck_release",
+   "severity": "medium",
+   "evidence": "open commanded; gripper got halfway open only after 4.99 s (collection median 0.52 s)",
+   "t_start_ns": 1784581039255500032,
+   "t_end_ns": 1784581044245499904,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_21",
+   "rule": "slow_or_stuck_release",
+   "severity": "medium",
+   "evidence": "open commanded; gripper still not halfway open after 1.57 s (collection median 0.52 s)",
+   "t_start_ns": 1784581360132900096,
+   "t_end_ns": 1784581361702900224,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_23",
+   "rule": "too_short",
+   "severity": "high",
+   "evidence": "1.63 s vs median 8.23 s",
+   "t_start_ns": 1784581396011699968,
+   "t_end_ns": 1784581397650800128,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_23",
+   "rule": "no_close_command",
+   "severity": "high",
+   "evidence": "cmd_gripper never above 0.5",
+   "t_start_ns": 1784581396011699968,
+   "t_end_ns": 1784581397650800128,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_23",
+   "rule": "low_motion",
+   "severity": "high",
+   "evidence": "end-effector path 0.009 m vs median 0.721 m",
+   "t_start_ns": 1784581396011699968,
+   "t_end_ns": 1784581397650800128,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  },
+  {
+   "episode_uid": "take_23",
+   "rule": "mostly_idle",
+   "severity": "medium",
+   "evidence": "70% of time below 0.01 m/s after first motion",
+   "t_start_ns": 1784581396011699968,
+   "t_end_ns": 1784581397650800128,
+   "source": "auto",
+   "review_status": "unreviewed",
+   "detector": "failure_screen_v1",
+   "thresholds_sha": "ee829330c858"
+  }
+ ]
+}

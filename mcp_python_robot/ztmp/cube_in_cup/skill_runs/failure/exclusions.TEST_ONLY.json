@@ -1,0 +1,36 @@
+{
+ "tool": "failure_screen_v1",
+ "reviewer": "skill-test (not a human review)",
+ "reviewed_at": "2026-11-05T01:01:32.907959+00:00",
+ "sheet": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/cube_in_cup/skill_runs/failure/review_sheet.TEST_ONLY.csv",
+ "excluded": [
+  {
+   "episode_uid": "take_23",
+   "flags": "too_short[high]; no_close_command[high]; low_motion[high]; mostly_idle[medium]",
+   "note": "TEST FIXTURE - not a real review decision"
+  }
+ ],
+ "relabel_failure": [],
+ "kept_flagged": [
+  {
+   "episode_uid": "take_01",
+   "flags": "duration_outlier[low]",
+   "note": "TEST FIXTURE - not a real review decision"
+  },
+  {
+   "episode_uid": "take_02",
+   "flags": "duration_outlier[low]",
+   "note": "TEST FIXTURE - not a real review decision"
+  },
+  {
+   "episode_uid": "take_09",
+   "flags": "slow_or_stuck_release[medium]",
+   "note": "TEST FIXTURE - not a real review decision"
+  },
+  {
+   "episode_uid": "take_21",
+   "flags": "slow_or_stuck_release[medium]",
+   "note": "TEST FIXTURE - not a real review decision"
+  }
+ ]
+}

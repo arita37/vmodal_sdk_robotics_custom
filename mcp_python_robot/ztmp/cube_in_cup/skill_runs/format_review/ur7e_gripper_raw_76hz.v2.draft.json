@@ -1,0 +1,152 @@
+{
+ "checked_at": "?",
+ "checked_by": "?",
+ "description": "UR7e + Robotiq 2F-85 from Bigenlight/cube_in_cup_raw; UR joint-state clock, other streams sample-and-hold. Demo format, not customer-approved.",
+ "extra_fields": "reject",
+ "fields": [
+  {
+   "dtype": "float",
+   "name": "q",
+   "names": [
+    "j1",
+    "j2",
+    "j3",
+    "j4",
+    "j5",
+    "j6"
+   ],
+   "range": [
+    -6.3,
+    6.3
+   ],
+   "required": true,
+   "shape": [
+    6
+   ],
+   "unit": "rad"
+  },
+  {
+   "dtype": "float",
+   "name": "current",
+   "names": [
+    "j1",
+    "j2",
+    "j3",
+    "j4",
+    "j5",
+    "j6"
+   ],
+   "note": "UR eff1..6; unit not stated by dataset",
+   "required": true,
+   "shape": [
+    6
+   ],
+   "unit": "ur_effort_unverified"
+  },
+  {
+   "dtype": "float",
+   "name": "gripper",
+   "range": [
+    0,
+    1
+   ],
+   "required": true,
+   "shape": [],
+   "unit": "normalized_grip_pos_0_open"
+  },
+  {
+   "dtype": "float",
+   "name": "ee_pos",
+   "names": [
+    "x",
+    "y",
+    "z"
+   ],
+   "note": "TCP in robot base frame",
+   "required": true,
+   "shape": [
+    3
+   ],
+   "unit": "m"
+  },
+  {
+   "check": "unit_norm",
+   "dtype": "float",
+   "name": "ee_quat",
+   "names": [
+    "qx",
+    "qy",
+    "qz",
+    "qw"
+   ],
+   "required": true,
+   "shape": [
+    4
+   ],
+   "unit": "quat_xyzw"
+  },
+  {
+   "dtype": "float",
+   "name": "cmd_q",
+   "names": [
+    "j1",
+    "j2",
+    "j3",
+    "j4",
+    "j5",
+    "j6"
+   ],
+   "required": true,
+   "role": "command",
+   "shape": [
+    6
+   ],
+   "unit": "rad"
+  },
+  {
+   "dtype": "float",
+   "name": "cmd_gripper",
+   "range": [
+    0,
+    1
+   ],
+   "required": true,
+   "role": "command",
+   "shape": [],
+   "unit": "normalized_grip_cmd"
+  }
+ ],
+ "file": {
+  "compression": [
+   "none",
+   "gzip"
+  ],
+  "header_line": "optional",
+  "type": "jsonl"
+ },
+ "format_id": "ur7e_gripper_raw_76hz",
+ "format_version": 2,
+ "nan_policy": "reject",
+ "sampling": {
+  "max_gap_ms": 50,
+  "mode": "time",
+  "rate_hz": 76,
+  "rate_tol_pct": 10
+ },
+ "time": {
+  "dtype": "int64",
+  "field": "t_ns",
+  "order": "strictly_increasing",
+  "time_base": "take_folder_start_assumed_utc_plus_t_rel_s",
+  "unit": "ns"
+ },
+ "video_align": {
+  "cmd_max_age_ms": 50,
+  "coverage": "full",
+  "frame_tol_ms": 16.7,
+  "max_frames_cmd_stale": 0,
+  "max_frames_no_telemetry": 0,
+  "on_fail": "flag",
+  "ref_camera": "cam_scene"
+ }
+}

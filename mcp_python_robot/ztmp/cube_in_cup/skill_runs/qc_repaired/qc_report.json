@@ -1,0 +1,58 @@
+{
+ "summary": {
+  "n": 2,
+  "verdicts": {
+   "pass": 1,
+   "reject": 1
+  },
+  "n_meta_errors": 0,
+  "outliers": {},
+  "collection": "skilltest_repair",
+  "dataset_rev": "bigenlight_cube_in_cup_raw_2026_07_20",
+  "format_id": "ur7e_gripper_raw_76hz@1"
+ },
+ "episodes": [
+  {
+   "uid": "take_10_broken",
+   "frames": 206,
+   "duration_s": 6.87,
+   "status": "rejected",
+   "verdict": "reject",
+   "n_errors": 20,
+   "first_error": "row 300 gripper: finite float required",
+   "n_warnings": 0,
+   "rate_hz": 0,
+   "gap_ms_max": 0,
+   "align_dt_ms_max": 0,
+   "cmd_age_ms_max": 0,
+   "frames_no_tel": null,
+   "check_report": "/home/ubunto/Downloads/vmodal_sdk_robotics_custom-main/mcp_python_robot/ztmp/mcp_robot/skilltest_repair/checks/take_10_broken.json",
+   "wrist_dt_ms_max": 17.6,
+   "wrist_repeat_pct": 12.1,
+   "meta_errors": [],
+   "meta_hints": [],
+   "meta_success": true
+  },
+  {
+   "uid": "take_19_corrupt",
+   "frames": 204,
+   "duration_s": 6.8,
+   "status": "validated",
+   "verdict": "pass",
+   "n_errors": 0,
+   "first_error": "",
+   "n_warnings": 0,
+   "rate_hz": 76.9,
+   "gap_ms_max": 26.8,
+   "align_dt_ms_max": 7.4,
+   "cmd_age_ms_max": 10.5,
+   "frames_no_tel": 0,
+   "check_report": null,
+   "wrist_dt_ms_max": 18.5,
+   "wrist_repeat_pct": 1.0,
+   "meta_errors": [],
+   "meta_hints": [],
+   "meta_success": true
+  }
+ ]
+}

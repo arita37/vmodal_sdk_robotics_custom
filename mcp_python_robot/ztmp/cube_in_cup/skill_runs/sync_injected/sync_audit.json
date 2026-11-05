@@ -1,0 +1,809 @@
+{
+ "aggregate": {
+  "cam_scene": {
+   "n_reliable": 21,
+   "n_total": 24,
+   "lag_ms_median": 160,
+   "lag_ms_mad": 100,
+   "resolution_ms": 85.0
+  },
+  "cam_wrist": {
+   "n_reliable": 12,
+   "n_total": 24,
+   "lag_ms_median": 165.0,
+   "lag_ms_mad": 135.0,
+   "resolution_ms": 82.5
+  },
+  "gross_desync": {
+   "confirmed_both_cameras": [
+    "take_12",
+    "take_19"
+   ],
+   "possible_one_camera": [
+    "take_14",
+    "take_17",
+    "take_26"
+   ]
+  }
+ },
+ "recommendation": [
+  "cam_scene: median lag 160 ms, MAD 100, resolution \u00b185 ms -> motion evidence does not support a collection-wide shift",
+  "cam_wrist: median lag 165.0 ms, MAD 135.0, resolution \u00b182 ms -> motion evidence does not support a collection-wide shift",
+  "gross desync (> 250 ms): confirmed by both cameras ['take_12', 'take_19']; one camera only ['take_14', 'take_17', 'take_26'] -> inspect frames vs telemetry before trusting these episodes"
+ ],
+ "episodes": [
+  {
+   "uid": "take_01",
+   "frames": 504,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 504,
+    "cfr": true,
+    "lag_ms": 160,
+    "lag_ci_ms": [
+     60,
+     260
+    ],
+    "corr": 0.61
+   },
+   "cam_wrist": {
+    "decoded": 504,
+    "cfr": true,
+    "lag_ms": 200,
+    "lag_ci_ms": [
+     90,
+     270
+    ],
+    "corr": 0.44
+   },
+   "wrist_dt_ms_mean": 14.3,
+   "wrist_dt_ms_max": 24.0,
+   "wrist_repeat_pct": 5.6,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 8.0,
+   "tail_ms": 11.8,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_02",
+   "frames": 492,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 492,
+    "cfr": true,
+    "lag_ms": 240,
+    "lag_ci_ms": [
+     100,
+     350
+    ],
+    "corr": 0.56
+   },
+   "cam_wrist": {
+    "decoded": 492,
+    "cfr": true,
+    "lag_ms": 160,
+    "lag_ci_ms": [
+     10,
+     200
+    ],
+    "corr": 0.51
+   },
+   "wrist_dt_ms_mean": 14.0,
+   "wrist_dt_ms_max": 20.2,
+   "wrist_repeat_pct": 2.2,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 31.3,
+   "tail_ms": 28.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_03",
+   "frames": 322,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 322,
+    "cfr": true,
+    "lag_ms": 190,
+    "lag_ci_ms": [
+     -20,
+     240
+    ],
+    "corr": 0.71
+   },
+   "cam_wrist": {
+    "decoded": 322,
+    "cfr": true,
+    "lag_ms": 270,
+    "lag_ci_ms": [
+     240,
+     440
+    ],
+    "corr": 0.42
+   },
+   "wrist_dt_ms_mean": 13.8,
+   "wrist_dt_ms_max": 18.6,
+   "wrist_repeat_pct": 1.6,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 38.3,
+   "tail_ms": 29.0,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_05",
+   "frames": 273,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 273,
+    "cfr": true,
+    "lag_ms": -70,
+    "lag_ci_ms": [
+     -210,
+     0
+    ],
+    "corr": 0.7
+   },
+   "cam_wrist": {
+    "decoded": 273,
+    "cfr": true,
+    "lag_ms": -1020,
+    "lag_ci_ms": [
+     -1060,
+     -980
+    ],
+    "corr": 0.27
+   },
+   "wrist_dt_ms_mean": 14.0,
+   "wrist_dt_ms_max": 20.5,
+   "wrist_repeat_pct": 3.3,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 24.0,
+   "tail_ms": 26.6,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_07",
+   "frames": 260,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 260,
+    "cfr": true,
+    "lag_ms": 460,
+    "lag_ci_ms": [
+     290,
+     490
+    ],
+    "corr": 0.53
+   },
+   "cam_wrist": {
+    "decoded": 260,
+    "cfr": true,
+    "lag_ms": 360,
+    "lag_ci_ms": [
+     260,
+     470
+    ],
+    "corr": 0.47
+   },
+   "wrist_dt_ms_mean": 13.9,
+   "wrist_dt_ms_max": 20.7,
+   "wrist_repeat_pct": 3.5,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 6.4,
+   "tail_ms": 25.5,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_08",
+   "frames": 247,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 247,
+    "cfr": true,
+    "lag_ms": 90,
+    "lag_ci_ms": [
+     10,
+     140
+    ],
+    "corr": 0.75
+   },
+   "cam_wrist": {
+    "decoded": 247,
+    "cfr": true,
+    "lag_ms": 140,
+    "lag_ci_ms": [
+     100,
+     170
+    ],
+    "corr": 0.34
+   },
+   "wrist_dt_ms_mean": 14.9,
+   "wrist_dt_ms_max": 24.7,
+   "wrist_repeat_pct": 5.3,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 7.5,
+   "tail_ms": 26.5,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_09",
+   "frames": 341,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 341,
+    "cfr": true,
+    "lag_ms": 160,
+    "lag_ci_ms": [
+     60,
+     190
+    ],
+    "corr": 0.66
+   },
+   "cam_wrist": {
+    "decoded": 341,
+    "cfr": true,
+    "lag_ms": 170,
+    "lag_ci_ms": [
+     80,
+     240
+    ],
+    "corr": 0.58
+   },
+   "wrist_dt_ms_mean": 14.0,
+   "wrist_dt_ms_max": 18.9,
+   "wrist_repeat_pct": 3.2,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 28.3,
+   "tail_ms": 9.0,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_10",
+   "frames": 206,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 206,
+    "cfr": true,
+    "lag_ms": 90,
+    "lag_ci_ms": [
+     -40,
+     120
+    ],
+    "corr": 0.77
+   },
+   "cam_wrist": {
+    "decoded": 206,
+    "cfr": true,
+    "lag_ms": 260,
+    "lag_ci_ms": [
+     210,
+     270
+    ],
+    "corr": 0.38
+   },
+   "wrist_dt_ms_mean": 15.0,
+   "wrist_dt_ms_max": 17.6,
+   "wrist_repeat_pct": 12.1,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 24.8,
+   "tail_ms": 34.5,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_11",
+   "frames": 226,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 226,
+    "cfr": true,
+    "lag_ms": 160,
+    "lag_ci_ms": [
+     130,
+     230
+    ],
+    "corr": 0.49
+   },
+   "cam_wrist": {
+    "decoded": 226,
+    "cfr": true,
+    "lag_ms": 1440,
+    "lag_ci_ms": [
+     1370,
+     1500
+    ],
+    "corr": 0.25
+   },
+   "wrist_dt_ms_mean": 14.1,
+   "wrist_dt_ms_max": 18.0,
+   "wrist_repeat_pct": 4.4,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 37.4,
+   "tail_ms": -5.4,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_12",
+   "frames": 220,
+   "issues": [
+    "CONFIRMED desync > 250 ms vs collection median on ['cam_scene', 'cam_wrist']"
+   ],
+   "cam_scene": {
+    "decoded": 220,
+    "cfr": true,
+    "lag_ms": 510,
+    "lag_ci_ms": [
+     430,
+     550
+    ],
+    "corr": 0.65
+   },
+   "cam_wrist": {
+    "decoded": 220,
+    "cfr": true,
+    "lag_ms": 500,
+    "lag_ci_ms": [
+     420,
+     530
+    ],
+    "corr": 0.39
+   },
+   "wrist_dt_ms_mean": 15.0,
+   "wrist_dt_ms_max": 23.7,
+   "wrist_repeat_pct": 8.2,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 32.4,
+   "tail_ms": -5.4,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_13",
+   "frames": 248,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 248,
+    "cfr": true,
+    "lag_ms": 10,
+    "lag_ci_ms": [
+     -80,
+     120
+    ],
+    "corr": 0.71
+   },
+   "cam_wrist": {
+    "decoded": 248,
+    "cfr": true,
+    "lag_ms": -20,
+    "lag_ci_ms": [
+     -50,
+     100
+    ],
+    "corr": 0.27
+   },
+   "wrist_dt_ms_mean": 13.9,
+   "wrist_dt_ms_max": 16.6,
+   "wrist_repeat_pct": 1.6,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 27.0,
+   "tail_ms": 9.3,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_14",
+   "frames": 209,
+   "issues": [
+    "possible desync > 250 ms vs collection median on ['cam_wrist']"
+   ],
+   "cam_scene": {
+    "decoded": 209,
+    "cfr": true,
+    "lag_ms": 150,
+    "lag_ci_ms": [
+     60,
+     290
+    ],
+    "corr": 0.34
+   },
+   "cam_wrist": {
+    "decoded": 209,
+    "cfr": true,
+    "lag_ms": 730,
+    "lag_ci_ms": [
+     720,
+     730
+    ],
+    "corr": 0.46
+   },
+   "wrist_dt_ms_mean": 15.3,
+   "wrist_dt_ms_max": 19.5,
+   "wrist_repeat_pct": 13.9,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 12.0,
+   "tail_ms": 12.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_15",
+   "frames": 253,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 253,
+    "cfr": true,
+    "lag_ms": 30,
+    "lag_ci_ms": [
+     -70,
+     100
+    ],
+    "corr": 0.71
+   },
+   "cam_wrist": {
+    "decoded": 253,
+    "cfr": true,
+    "lag_ms": -10,
+    "lag_ci_ms": [
+     -40,
+     0
+    ],
+    "corr": 0.4
+   },
+   "wrist_dt_ms_mean": 14.9,
+   "wrist_dt_ms_max": 16.9,
+   "wrist_repeat_pct": 5.5,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 30.7,
+   "tail_ms": 27.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_16",
+   "frames": 260,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 260,
+    "cfr": true,
+    "lag_ms": 80,
+    "lag_ci_ms": [
+     -20,
+     120
+    ],
+    "corr": 0.72
+   },
+   "cam_wrist": {
+    "decoded": 260,
+    "cfr": true,
+    "lag_ms": 60,
+    "lag_ci_ms": [
+     50,
+     100
+    ],
+    "corr": 0.34
+   },
+   "wrist_dt_ms_mean": 14.5,
+   "wrist_dt_ms_max": 19.0,
+   "wrist_repeat_pct": 8.1,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 6.3,
+   "tail_ms": -6.8,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_17",
+   "frames": 253,
+   "issues": [
+    "possible desync > 250 ms vs collection median on ['cam_wrist']"
+   ],
+   "cam_scene": {
+    "decoded": 253,
+    "cfr": true,
+    "lag_ms": 260,
+    "lag_ci_ms": [
+     210,
+     360
+    ],
+    "corr": 0.49
+   },
+   "cam_wrist": {
+    "decoded": 253,
+    "cfr": true,
+    "lag_ms": -350,
+    "lag_ci_ms": [
+     -450,
+     -140
+    ],
+    "corr": 0.42
+   },
+   "wrist_dt_ms_mean": 13.8,
+   "wrist_dt_ms_max": 17.2,
+   "wrist_repeat_pct": 2.8,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 25.8,
+   "tail_ms": 12.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_18",
+   "frames": 214,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 214,
+    "cfr": true,
+    "lag_ms": -120,
+    "lag_ci_ms": [
+     -220,
+     -50
+    ],
+    "corr": 0.67
+   },
+   "cam_wrist": {
+    "decoded": 214,
+    "cfr": true,
+    "lag_ms": -30,
+    "lag_ci_ms": [
+     -80,
+     0
+    ],
+    "corr": 0.36
+   },
+   "wrist_dt_ms_mean": 14.4,
+   "wrist_dt_ms_max": 18.8,
+   "wrist_repeat_pct": 2.3,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 26.7,
+   "tail_ms": 28.4,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_19",
+   "frames": 204,
+   "issues": [
+    "video starts 668.2 ms before telemetry",
+    "CONFIRMED desync > 250 ms vs collection median on ['cam_scene', 'cam_wrist']"
+   ],
+   "cam_scene": {
+    "decoded": 204,
+    "cfr": true,
+    "lag_ms": 600,
+    "lag_ci_ms": [
+     510,
+     680
+    ],
+    "corr": 0.66
+   },
+   "cam_wrist": {
+    "decoded": 204,
+    "cfr": true,
+    "lag_ms": 750,
+    "lag_ci_ms": [
+     670,
+     840
+    ],
+    "corr": 0.5
+   },
+   "wrist_dt_ms_mean": 13.6,
+   "wrist_dt_ms_max": 18.5,
+   "wrist_repeat_pct": 1.0,
+   "wrist_repeat_longest": 1,
+   "lead_ms": -668.2,
+   "tail_ms": 708.0,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_20",
+   "frames": 242,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 242,
+    "cfr": true,
+    "lag_ms": 10,
+    "lag_ci_ms": [
+     -60,
+     60
+    ],
+    "corr": 0.71
+   },
+   "cam_wrist": {
+    "decoded": 242,
+    "cfr": true,
+    "lag_ms": 0,
+    "lag_ci_ms": [
+     -40,
+     70
+    ],
+    "corr": 0.49
+   },
+   "wrist_dt_ms_mean": 14.2,
+   "wrist_dt_ms_max": 18.4,
+   "wrist_repeat_pct": 3.3,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 27.5,
+   "tail_ms": 28.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_21",
+   "frames": 231,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 231,
+    "cfr": true,
+    "lag_ms": 270,
+    "lag_ci_ms": [
+     200,
+     400
+    ],
+    "corr": 0.69
+   },
+   "cam_wrist": {
+    "decoded": 231,
+    "cfr": true,
+    "lag_ms": 420,
+    "lag_ci_ms": [
+     220,
+     430
+    ],
+    "corr": 0.37
+   },
+   "wrist_dt_ms_mean": 13.7,
+   "wrist_dt_ms_max": 34.3,
+   "wrist_repeat_pct": 3.0,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 19.5,
+   "tail_ms": -5.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_22",
+   "frames": 221,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 221,
+    "cfr": true,
+    "lag_ms": 70,
+    "lag_ci_ms": [
+     0,
+     120
+    ],
+    "corr": 0.72
+   },
+   "cam_wrist": {
+    "decoded": 221,
+    "cfr": true,
+    "lag_ms": 180,
+    "lag_ci_ms": [
+     70,
+     310
+    ],
+    "corr": 0.22
+   },
+   "wrist_dt_ms_mean": 13.5,
+   "wrist_dt_ms_max": 16.3,
+   "wrist_repeat_pct": 0.5,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 14.6,
+   "tail_ms": 15.7,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_23",
+   "frames": 49,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 49,
+    "cfr": true,
+    "lag_ms": null,
+    "lag_ci_ms": null,
+    "corr": null
+   },
+   "cam_wrist": {
+    "decoded": 49,
+    "cfr": true,
+    "lag_ms": null,
+    "lag_ci_ms": null,
+    "corr": null
+   },
+   "wrist_dt_ms_mean": 14.4,
+   "wrist_dt_ms_max": 18.6,
+   "wrist_repeat_pct": 4.1,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 24.4,
+   "tail_ms": 10.9,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_24",
+   "frames": 247,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 247,
+    "cfr": true,
+    "lag_ms": 340,
+    "lag_ci_ms": [
+     210,
+     410
+    ],
+    "corr": 0.52
+   },
+   "cam_wrist": {
+    "decoded": 247,
+    "cfr": true,
+    "lag_ms": 60,
+    "lag_ci_ms": [
+     50,
+     100
+    ],
+    "corr": 0.58
+   },
+   "wrist_dt_ms_mean": 13.8,
+   "wrist_dt_ms_max": 20.2,
+   "wrist_repeat_pct": 6.5,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 27.0,
+   "tail_ms": -5.2,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_25",
+   "frames": 269,
+   "issues": [],
+   "cam_scene": {
+    "decoded": 269,
+    "cfr": true,
+    "lag_ms": 160,
+    "lag_ci_ms": [
+     80,
+     160
+    ],
+    "corr": 0.8
+   },
+   "cam_wrist": {
+    "decoded": 269,
+    "cfr": true,
+    "lag_ms": 150,
+    "lag_ci_ms": [
+     50,
+     190
+    ],
+    "corr": 0.5
+   },
+   "wrist_dt_ms_mean": 13.7,
+   "wrist_dt_ms_max": 23.2,
+   "wrist_repeat_pct": 3.3,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 8.1,
+   "tail_ms": -5.9,
+   "speed_from": "q"
+  },
+  {
+   "uid": "take_26",
+   "frames": 229,
+   "issues": [
+    "possible desync > 250 ms vs collection median on ['cam_scene']"
+   ],
+   "cam_scene": {
+    "decoded": 229,
+    "cfr": true,
+    "lag_ms": -1100,
+    "lag_ci_ms": [
+     -1200,
+     -1030
+    ],
+    "corr": 0.35
+   },
+   "cam_wrist": {
+    "decoded": 229,
+    "cfr": true,
+    "lag_ms": 730,
+    "lag_ci_ms": [
+     690,
+     770
+    ],
+    "corr": 0.28
+   },
+   "wrist_dt_ms_mean": 14.1,
+   "wrist_dt_ms_max": 17.9,
+   "wrist_repeat_pct": 6.1,
+   "wrist_repeat_longest": 1,
+   "lead_ms": 7.2,
+   "tail_ms": 12.1,
+   "speed_from": "q"
+  }
+ ]
+}
