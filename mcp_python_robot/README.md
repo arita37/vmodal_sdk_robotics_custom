@@ -7,83 +7,106 @@ Start with the local test below: **no API key or network upload is needed**.
 
 ## Install
 
-### 1. Get the project and dependencies
+### 1. Run the one-line installer
 
-You need Git, **Python 3.10+**, and **FFmpeg** (both `ffmpeg` and `ffprobe` on PATH).
-The commands below use Bash on macOS/Linux or a compatible shell.
+On **macOS/Linux (Bash)**, install Git, **Python 3.10+**, and **FFmpeg** first.
+FFmpeg must provide both `ffmpeg` and `ffprobe` on PATH. For example, use
+`brew install ffmpeg` on macOS or `sudo apt-get install ffmpeg python3-venv`
+on Debian/Ubuntu. The installer never uses sudo or modifies system packages.
+Windows users should use WSL; native Windows is not supported by this installer.
 
-```bash
-git clone https://github.com/arita37/vmodal_sdk_robotics_custom.git
-cd vmodal_sdk_robotics_custom/mcp_python_robot
-python3 --version
-ffmpeg -version
-ffprobe -version
-```
-
-If you already have the checkout, open its `mcp_python_robot` directory instead.
-Install FFmpeg with your operating system's package manager if either FFmpeg command
-is missing.
-
-Use a dedicated Python environment so the robot MCP does not conflict with the generic
-MCP package:
+From a directory where you want to keep the project, copy this single line:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-bash install.sh install
-bash install.sh doctor
+git clone --branch docs/robot-mcp-beginner-readme --single-branch https://github.com/arita37/vmodal_sdk_robotics_custom.git vmodal-robot && bash vmodal-robot/mcp_python_robot/install_full.sh
 ```
 
-The package is `vmodal_mcp_robot`; the executable is `vmodal-mcp-robot`.
-If the executable is not on PATH, use the installed interpreter with
-`python -m src.mcp_server.main_mcp run --transport stdio`.
+This targets the branch containing this installer. Keep the checkout in place: the
+package is installed in editable mode. Git authentication is required if your account
+needs it to access the repository.
+
+**Already cloned it?** From the checkout's `mcp_python_robot` directory on this branch:
+
+```bash
+bash install_full.sh
+```
+
+This is also the retry command. It reuses `.venv-robot` and safely regenerates its
+credential-free configuration. It does not pull Git changes, delete an existing folder,
+overwrite assistant settings, or upload data. If `vmodal-robot` already exists, the
+clone command stops without touching it; use the existing-checkout command instead.
+
+The installer checks Python and FFmpeg, creates a dedicated `.venv-robot`, installs the
+package and dependencies, checks dependency consistency, tests the bundled telemetry
+locally, and prints a ready-to-use **absolute-path MCP configuration and test prompt**.
+No environment activation or API key is needed. The package is `vmodal_mcp_robot`;
+the executable is `.venv-robot/bin/vmodal-mcp-robot`.
 
 ### 2. Connect your assistant
 
-Installing the package does not connect it to your assistant automatically.
-For the credential-free local test, add a **local stdio MCP server** to your client.
-Find the absolute Python executable and sample directory:
-
-```bash
-python -c "import sys; print(sys.executable)"
-pwd
-```
-
-In a client that accepts an `mcpServers` JSON configuration, use this template.
-Replace `/absolute/path/to` with your actual checkout location:
+Installation prepares the server; your assistant still needs to enable it.
+Import or merge the generated `.venv-robot/mcp-config.json` into your client's MCP
+settings. Do not replace an existing configuration wholesale. The JSON uses this shape,
+with the actual checkout path already filled in by the installer:
 
 ```json
 {
   "mcpServers": {
     "vmodal-robot": {
-      "command": "/absolute/path/to/vmodal_sdk_robotics_custom/mcp_python_robot/.venv/bin/python",
+      "command": "/absolute/path/to/vmodal-robot/mcp_python_robot/.venv-robot/bin/python",
       "args": ["-m", "src.mcp_server.main_mcp", "run", "--transport", "stdio"]
     }
   }
 }
 ```
 
-The exact configuration location varies by client. Enable/reconnect the server in your
-client and confirm its tool list includes `telemetry_format_draft_from_file`.
-The client launches the stdio server; you do not also need to run it in a separate terminal.
-Use absolute sample paths in prompts because the client may start the server in a
-different working directory.
+Configuration location/format varies by client (for example, Codex uses TOML rather
+than this JSON). Transfer the same `command` and `args` when your client has its own
+format. Enable/reconnect the server and confirm its tools include
+`telemetry_format_draft_from_file`. The client launches the stdio server; you do not
+need to run a separate server terminal. The installer does not automatically register
+clients or change existing credentials.
 
-For **authenticated upload and search**, the checkout also provides
-`bash install_mcp.sh codex YOUR_API_KEY` (replace `codex` with `claude`, `cursor`, or
-`copilot` as appropriate). The matching client CLI must be installed. This installs the
-package and registers it using the selected interpreter and key. Keep credentials out of
-chat and version control; registration stores them in the client's configuration.
+For **authenticated upload and search**, from `mcp_python_robot`, you can use the
+existing registration helper with the dedicated interpreter:
+
+```bash
+PYTHON_BIN="$PWD/.venv-robot/bin/python" bash install_mcp.sh codex
+```
+
+Set `api_key` securely in the terminal environment first; replace `codex` with `claude`,
+`cursor`, or `copilot` as appropriate. The matching client CLI must be installed.
+Registration stores the key in client configuration; Cursor opens an install link
+containing the key. Never paste keys into chat, commit them, or share that link.
 See [configuration](docs/env_vars.md) before enabling network operations.
+
+### If installation fails
+
+- **Python missing/too old:** install Python 3.10+; select it with
+  `PYTHON_BIN=/absolute/path/to/python3 bash install_full.sh`.
+- **FFmpeg/ffprobe missing or broken:** install/repair FFmpeg, then rerun.
+- **venv/ensurepip missing:** install your operating system's Python venv package.
+  If `.venv-robot` is incomplete, inspect it and move it aside manually; the installer
+  never deletes it. A symlink or non-venv at that location is refused.
+- **pip missing:** run `.venv-robot/bin/python -m ensurepip --upgrade` and retry.
+- **Download, SDK compatibility, or pip failure:** read the original error immediately
+  above the stage summary. Check network/proxy/package-index access, disk space, and
+  permissions. Fix the cause and rerun; success is reported only after validation.
+- **Smoke-test/import failure:** do not connect the client yet. Use the error to repair
+  dependencies, and keep this dedicated environment separate from the generic MCP,
+  which also uses the Python `src` namespace.
+- **Client cannot start the server:** use the generated absolute Python path, keep the
+  checkout where it was installed, and reconnect. If you move it, recreate the venv
+  and import the regenerated configuration.
 
 ## One test Prompt
 
-Paste this into your connected assistant. Replace the path with the absolute path printed
-above, followed by `/data/robot/ep_demo1/telemetry.jsonl`:
+Paste this into your connected assistant. Use the exact prompt printed by the installer, or replace the sample path below
+with your checkout’s absolute path:
 
 ```text
 Use telemetry_format_draft_from_file to inspect this local sample:
- /absolute/path/to/vmodal_sdk_robotics_custom/mcp_python_robot/data/robot/ep_demo1/telemetry.jsonl
+ /absolute/path/to/vmodal-robot/mcp_python_robot/data/robot/ep_demo1/telemetry.jsonl
 
 Do not write a file, register a format, or upload anything.
 Show the inferred telemetry fields, their shapes and sampling rate.
@@ -288,7 +311,7 @@ before exporting candidate tags; candidates remain unreviewed until explicit hum
 Run all offline tests:
 
 ```bash
-bash test.sh test
+PATH="$PWD/.venv-robot/bin:$PATH" bash test.sh test
 ```
 
 The runner executes the offline suites included in this checkout, including telemetry
@@ -299,3 +322,4 @@ configured credentials and may create remote test collections.
 This checkout does not include a GitHub Actions release workflow. Run the commands above
 locally; the [live validation record](docs/live_api_validation.md) describes earlier runs,
 not a workflow available to dispatch from this checkout.
+
