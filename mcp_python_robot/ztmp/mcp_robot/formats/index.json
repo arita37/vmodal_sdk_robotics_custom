@@ -1,0 +1,18 @@
+{
+  "ur7e_gripper_raw_76hz": {
+    "1": {
+      "checked_at": "2026-11-04",
+      "checked_by": "claude_draft_pending_user_review",
+      "registered_at": "2026-11-04T16:43:53.492171+00:00",
+      "sha256": "c867cd3a15cf3990dce3491f809d05abb3b15fd538545024db7dee7c2d3dc823"
+    }
+  },
+  "xarm6_gripper_100hz": {
+    "1": {
+      "checked_at": "2026-11-03",
+      "checked_by": "synthetic_fixture",
+      "registered_at": "2026-11-04T03:01:06.090310+00:00",
+      "sha256": "9ec40bca93ab84ea2ac409b22944dfcf6dd2105194e0b79493fe6bada99da8e6"
+    }
+  }
+}

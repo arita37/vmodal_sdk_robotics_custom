@@ -1,0 +1,51 @@
+{
+ "episodes_used": 23,
+ "frames": 6171,
+ "excluded": [
+  "take_23"
+ ],
+ "warnings": [],
+ "action_jumps": {
+  "n": 0,
+  "threshold": "|\u0394 per frame| > max(3.0\u00d7q99 of |\u0394|, 0.05)",
+  "limit_per_dim": {
+   "cmd_q.j1": 0.05,
+   "cmd_q.j2": 0.0513,
+   "cmd_q.j3": 0.05,
+   "cmd_q.j4": 0.0675,
+   "cmd_q.j5": 0.05,
+   "cmd_q.j6": 0.06,
+   "cmd_gripper": 0.6773
+  },
+  "by_episode": {},
+  "top": []
+ },
+ "gripper": {
+  "cmd_gripper": {
+   "suggested_binarize_threshold": 0.5,
+   "fraction_between_5_95pct": 0.039
+  }
+ },
+ "action_leads_state_frames": {
+  "best": null,
+  "ms": null,
+  "corr_profile": [
+   0.844,
+   0.833,
+   0.836,
+   0.832,
+   0.822,
+   0.81,
+   0.793,
+   0.776,
+   0.755,
+   0.733,
+   0.71,
+   0.684,
+   0.66,
+   0.634,
+   0.609
+  ],
+  "hint": "correlation profile is flat over the first frames: lag unresolved at 30 fps; use the telemetry-rate estimate from vmodal-robot-format-review"
+ }
+}

@@ -1,0 +1,6 @@
+[project]
+name = "vmodal_mcp"
+dependencies = [
+  "vmodal>=1.0.0,<2.0.0",
+  "mcp>=1.2.0",
+]

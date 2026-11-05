@@ -1,0 +1,2 @@
+[console_scripts]
+vmodal-mcp-robot = src.mcp_server.main_mcp:cli

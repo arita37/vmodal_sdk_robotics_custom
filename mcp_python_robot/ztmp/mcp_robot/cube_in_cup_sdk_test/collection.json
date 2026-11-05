@@ -1,0 +1,8 @@
+{
+  "cameras": [
+    "cam_scene",
+    "cam_wrist"
+  ],
+  "fps": 30,
+  "telemetry_format": "ur7e_gripper_raw_76hz@1"
+}

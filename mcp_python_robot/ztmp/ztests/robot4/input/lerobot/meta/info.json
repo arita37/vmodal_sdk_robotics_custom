@@ -1,0 +1,7 @@
+{
+  "codebase_version": "v3.0",
+  "fps": 30,
+  "total_episodes": 2,
+  "total_frames": 120,
+  "video_path": "videos/{video_key}/chunk-{chunk_index:03d}/file-{file_index:03d}.mp4"
+}

@@ -1,0 +1,14 @@
+{
+  "cmd_latency_ms": 0,
+  "duration_s": 2,
+  "episode_uid": "ep_demo2",
+  "length": 60,
+  "n_dropped": 0,
+  "operator_id": "fixture",
+  "robot_id": "xarm_demo",
+  "start_time": "2026-10-22T10:00:00Z",
+  "success": true,
+  "sync_offset_ms_max": 1.0,
+  "sync_offset_ms_mean": 0.5,
+  "task": "put the cup in the bin"
+}

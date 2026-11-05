@@ -1,0 +1,118 @@
+{
+ "episodes_used": 23,
+ "frames": 6171,
+ "excluded": [
+  "take_23"
+ ],
+ "warnings": [
+  "take_02: ee_quat has 3 sign flips; repair before using it as a state feature",
+  "take_05: ee_quat has 8 sign flips; repair before using it as a state feature",
+  "take_07: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_08: ee_quat has 2 sign flips; repair before using it as a state feature",
+  "take_09: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_10: ee_quat has 3 sign flips; repair before using it as a state feature",
+  "take_11: ee_quat has 3 sign flips; repair before using it as a state feature",
+  "take_12: ee_quat has 2 sign flips; repair before using it as a state feature",
+  "take_13: ee_quat has 6 sign flips; repair before using it as a state feature",
+  "take_14: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_15: ee_quat has 2 sign flips; repair before using it as a state feature",
+  "take_16: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_17: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_18: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_19: ee_quat has 7 sign flips; repair before using it as a state feature",
+  "take_20: ee_quat has 2 sign flips; repair before using it as a state feature",
+  "take_24: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_25: ee_quat has 1 sign flips; repair before using it as a state feature",
+  "take_26: ee_quat has 3 sign flips; repair before using it as a state feature"
+ ],
+ "action_jumps": {
+  "n": 98,
+  "threshold": "|\u0394| > max(8.0\u00d7robust std, 0.02)",
+  "by_episode": {
+   "take_02": 9,
+   "take_10": 3,
+   "take_11": 3,
+   "take_13": 6,
+   "take_14": 3,
+   "take_15": 3,
+   "take_16": 2,
+   "take_17": 3,
+   "take_18": 2,
+   "take_19": 2,
+   "take_20": 6,
+   "take_21": 13,
+   "take_22": 11,
+   "take_24": 22,
+   "take_25": 7,
+   "take_26": 3
+  },
+  "top": [
+   {
+    "uid": "take_21",
+    "frame": 219,
+    "dim": "cmd_q.j4",
+    "delta": 0.03
+   },
+   {
+    "uid": "take_22",
+    "frame": 218,
+    "dim": "cmd_q.j4",
+    "delta": 0.03
+   },
+   {
+    "uid": "take_22",
+    "frame": 218,
+    "dim": "cmd_q.j6",
+    "delta": 0.03
+   },
+   {
+    "uid": "take_25",
+    "frame": 264,
+    "dim": "cmd_q.j4",
+    "delta": 0.03
+   },
+   {
+    "uid": "take_25",
+    "frame": 267,
+    "dim": "cmd_q.j4",
+    "delta": 0.03
+   },
+   {
+    "uid": "take_17",
+    "frame": 244,
+    "dim": "cmd_q.j4",
+    "delta": 0.0275
+   },
+   {
+    "uid": "take_20",
+    "frame": 223,
+    "dim": "cmd_q.j4",
+    "delta": 0.0275
+   },
+   {
+    "uid": "take_21",
+    "frame": 130,
+    "dim": "cmd_q.j2",
+    "delta": 0.0275
+   },
+   {
+    "uid": "take_21",
+    "frame": 214,
+    "dim": "cmd_q.j4",
+    "delta": 0.0275
+   },
+   {
+    "uid": "take_21",
+    "frame": 223,
+    "dim": "cmd_q.j4",
+    "delta": 0.0275
+   }
+  ]
+ },
+ "gripper": {
+  "cmd_gripper": {
+   "suggested_binarize_threshold": 0.5,
+   "fraction_between_5_95pct": 0.039
+  }
+ }
+}

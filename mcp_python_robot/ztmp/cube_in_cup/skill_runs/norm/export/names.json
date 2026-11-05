@@ -1,0 +1,62 @@
+{
+ "state": [
+  "q.j1",
+  "q.j2",
+  "q.j3",
+  "q.j4",
+  "q.j5",
+  "q.j6",
+  "gripper"
+ ],
+ "action": [
+  "cmd_q.j1",
+  "cmd_q.j2",
+  "cmd_q.j3",
+  "cmd_q.j4",
+  "cmd_q.j5",
+  "cmd_q.j6",
+  "cmd_gripper"
+ ],
+ "meta": {
+  "format_id": "ur7e_gripper_raw_76hz",
+  "format_version": 1,
+  "fps": 30,
+  "state_fields": [
+   "q",
+   "gripper"
+  ],
+  "action_fields": [
+   "cmd_q",
+   "cmd_gripper"
+  ],
+  "episodes": [
+   "take_01",
+   "take_02",
+   "take_03",
+   "take_05",
+   "take_07",
+   "take_08",
+   "take_09",
+   "take_10",
+   "take_11",
+   "take_12",
+   "take_13",
+   "take_14",
+   "take_15",
+   "take_16",
+   "take_17",
+   "take_18",
+   "take_19",
+   "take_20",
+   "take_21",
+   "take_22",
+   "take_24",
+   "take_25",
+   "take_26"
+  ],
+  "excluded": [
+   "take_23"
+  ],
+  "alignment": "state=nearest telemetry row to scene frame; action=latest command at or before the frame"
+ }
+}

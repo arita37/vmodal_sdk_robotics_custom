@@ -1,0 +1,12 @@
+{
+ "collection": "cube_in_cup_sdk_test",
+ "uid": "take_19",
+ "status": "skipped",
+ "seconds": 0.8,
+ "server_collection": true,
+ "server_subcollections": [
+  "cam_scene",
+  "cam_wrist"
+ ],
+ "at": "2026-11-05T01:04:57.687302+00:00"
+}
