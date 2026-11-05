@@ -38,6 +38,7 @@ mcp_test_unit() {
   ## Usage:
     bash test.sh test
   '
+  python -m unittest discover -s tests -p test_install_full.py
   python -m unittest discover -s tests -p test_install.py
   python -m unittest discover -s tests -p test_video_upload.py
   python tests/test_utils.py test_all
