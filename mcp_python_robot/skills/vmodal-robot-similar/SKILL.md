@@ -3,7 +3,8 @@ name: vmodal-robot-similar
 description: Find robot episodes with failures similar to an anchor or text query, verify scene and wrist frames, and export unreviewed candidate tags for human review.
 ---
 
-Use the robot MCP tools with vmodal-find and vmodal-incident. Read [reference.md](reference.md)
+Use the robot MCP tools with the included [vmodal-find](../vmodal-find/SKILL.md) skill.
+Read [reference.md](reference.md)
 for detector requirements and thresholds. Customer MCAP/LeRobot data remains authoritative.
 
 1. Identify the collection and dataset revision. Anchor on an episode/time, frame image,
@@ -24,8 +25,9 @@ for detector requirements and thresholds. Customer MCAP/LeRobot data remains aut
    field distances; windows crossing gaps are rejected. Fuse reciprocal ranks, merging windows
    separated by at most 3 seconds with a maximum span of 15 seconds. Keep visual relevance,
    signature distance, and detector confidence as separate evidence.
-5. Triage batches of ten. Retrieve the peak scene/wrist frames, use the existing
-   `vmodal-incident/scripts/frames_strip.sh` contact-sheet helper, and assign PASS/PARTIAL/FAIL
+5. Triage batches of ten. Use `robot_retrieve` to retrieve the peak scene/wrist frames
+   and inspect both returned image paths directly, labeled with episode, camera and time.
+   No contact-sheet helper is required or included. Assign PASS/PARTIAL/FAIL
    using the catalog visual rule. Stop after two consecutive batches with no new PASS or
    after 40 candidates. State the stopping rule.
 6. Save triaged candidates as JSON with `verdict`, `episode_uid`, half-open integer
@@ -34,7 +36,7 @@ for detector requirements and thresholds. Customer MCAP/LeRobot data remains aut
    PASS/PARTIAL become `source=auto,review_status=unreviewed`; FAIL is omitted. Confidence
    stays null without a versioned detector. Never delete/exclude episodes or write accepted tags.
 7. Report anchor/signature, searches, coverage, episode/window/verdict/relevance/detector table,
-   contact sheets and tag file paths. Explain that the reviewer must accept/reject/correct and
+   reviewed frame paths and tag file paths. Explain that the reviewer must accept/reject/correct and
    freeze a `tag_rev` snapshot before training filters consume tags.
 
 For text-only batch tagging, omit anchor retrieval and use `min_relevance` on the candidate

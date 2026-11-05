@@ -142,9 +142,9 @@ mcp_print_claude() {
   local pycmd
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    printf '%s\n' 'claude mcp add --scope local vmodal -e api_key=PUT_API_KEY_HERE -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
+    printf '%s\n' 'claude mcp add vmodal --scope local -e api_key=PUT_API_KEY_HERE -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
   else
-    printf 'claude mcp add --scope local vmodal -e api_key=PUT_API_KEY_HERE -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
+    printf 'claude mcp add vmodal --scope local -e api_key=PUT_API_KEY_HERE -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
   fi
   printf '%s\n' 'claude mcp list'
 }
@@ -223,9 +223,9 @@ mcp_register_claude_local() {
   scope="${2:-local}"
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    claude mcp add --scope "$scope" --env "api_key=$key" vmodal -- py -3 -m src.mcp_server.main_mcp run --transport stdio
+    claude mcp add vmodal --scope "$scope" --env "api_key=$key" -- py -3 -m src.mcp_server.main_mcp run --transport stdio
   else
-    claude mcp add --scope "$scope" --env "api_key=$key" vmodal -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
+    claude mcp add vmodal --scope "$scope" --env "api_key=$key" -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
   fi
   claude mcp list
 }

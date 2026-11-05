@@ -19,6 +19,10 @@ its executable is `vmodal-mcp-robot`. The copied generic MCP bootstrap URLs are 
 Both MCP variants use the historical `src` Python namespace, so install only the intended
 variant into an existing interpreter. MCP configuration uses the registered interpreter.
 
+The public `vmodal` 1.0.0 SDK is supported: robot uploads use a temporary, same-content
+episode-named upload alias when the SDK lacks `video_filename`. Newer APIs receive
+`video_filename` and `reduce_size=False`. No unpublished minimum SDK version is required.
+
 Start by drafting telemetry with `telemetry_format_draft_from_file`, review all `?` values,
 then register with `update_json_format_specs_from_file`. Bind a collection and run
 `robot_episode_upload(dry_run=true)` before network upload. Local format/check/dry-run tools
@@ -32,9 +36,11 @@ Telemetry and frame maps remain in the configured local robot directory in Phase
 
 Use the committed [data/robot](data/robot/README.md) samples to validate a two-camera
 handoff and inspect telemetry around a suspected failure. Each episode has 60 frames
-at encoded 30 fps and 100 Hz telemetry. `ep_demo1` has planted grasp-miss, joint-current
-and gripper-opening events and `success=false`; `ep_demo2` provides a steady-grasp
-comparison with `success=true`. The task metadata is `put the cup in the bin`.
+at encoded 30 fps and 100 Hz telemetry. Both episodes have a 9.0 A j2 current spike
+at 500 ms. `ep_demo1` also has planted grasp-miss and gripper-opening events and
+`success=false`; `ep_demo2` provides a steady-grasp comparison with `success=true`.
+The gripper telemetry, not the shared current spike, distinguishes the episodes.
+The task metadata is `put the cup in the bin`.
 The videos are synthetic test patterns: use them to check frame alignment and retrieval,
 not to establish visual evidence of a failed grasp.
 
@@ -128,8 +134,10 @@ retrieval; Phase A telemetry and maps remain local.
 
 For a network demo, configure `api_key` and repeat the dataset upload with
 `dry_run=false`, using one collection per dataset revision. Require `uploaded` status
-before searching. Create image-embedding indexes for `cam_scene` and `cam_wrist` with
-`index_create`, then wait for each `index_status` job to complete. See the
+before searching. Index jobs must run serially within a collection: call `index_create`
+for `cam_scene`, poll its returned job with `index_status` until it succeeds, then create
+and wait for the `cam_wrist` index. Do not start the second job while the first is
+running: the API returns HTTP 409. If a job fails, inspect its error before continuing. See the
 [configuration guide](docs/env_vars.md) and [live validation example](docs/live_api_validation.md).
 
 Paste these prompts in order after the local walkthrough. The search query describes
@@ -139,7 +147,9 @@ the actual test-pattern footage; semantic failure searches need real robot video
 Upload the same data/robot/lerobot dataset to robot_demo, revision r1, with
 robot_dataset_upload and dry_run=false. Use data/robot/frame_map.parquet,
 data/robot/telemetry and data/robot/meta. Report each episode's upload status.
-Create image-embedding indexes for cam_scene and cam_wrist and wait for completion.
+Create the cam_scene image-embedding index and poll index_status until it succeeds.
+Only then create the cam_wrist index and wait for success. Run only one index job
+at a time in robot_demo; report any failure before proceeding to search.
 
 List my collections, then show the sub-collections of robot_demo in a table.
 Use collection_list and collection_subcollections_list.
@@ -192,9 +202,11 @@ Run all offline tests:
 bash test.sh test
 ```
 
-The `sdk_mcp_robot_test_release.yml` workflow runs these tests against both the public SDK
-and repository SDK, then builds and checks wheel/sdist artifacts. A manual dispatch with
-`run_live_tests=true` also runs authenticated SDK, stdio, upload/index/search and full robot
-upload/search/retrieval tests using
-the same Infisical and Cloudflare pattern as `sdk_mcp_test_release.yml`. This workflow
-produces release artifacts; it does not publish to an unspecified public repository.
+The runner executes the offline suites included in this checkout, including telemetry
+scanning and checkout-reference checks. Authenticated validation is available explicitly
+with `bash test.sh live`, `live_mcp`, `initial`, and `robot_live`; these commands require
+configured credentials and may create remote test collections.
+
+This checkout does not include a GitHub Actions release workflow. Run the commands above
+locally; the [live validation record](docs/live_api_validation.md) describes earlier runs,
+not a workflow available to dispatch from this checkout.

@@ -263,8 +263,10 @@ def os_video_probe(path):
 
 def os_video_cut(src, dst, start, length):
     Path(dst).parent.mkdir(parents=True, exist_ok=True)
+    # Declare the encoder rate as well as filtering frames. Without it, some
+    # FFmpeg versions omit the final frame duration when -frames:v ends the cut.
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-ss", str(start),
-                    "-frames:v", str(length), "-an", "-vf", "fps=30,setpts=PTS-STARTPTS",
+                    "-frames:v", str(length), "-an", "-vf", "fps=30,setpts=PTS-STARTPTS", "-r", "30",
                     "-c:v", "libx264", "-pix_fmt", "yuv420p", str(dst)], check=True)
     return str(Path(dst).resolve())
 
