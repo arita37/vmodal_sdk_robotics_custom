@@ -52,6 +52,7 @@ Details, evidence and suggested fixes are below.
 
 The one-line command from README step 1 cloned the branch and ran the installer. The installer created `.venv-robot`, installed the package, passed the local telemetry smoke test and printed a ready MCP configuration. Re-running `bash install_full.sh` is safe: it reuses the environment and does not delete anything.
 
+![Install output](images/01_install.png)
 
 The server was connected with:
 
@@ -60,6 +61,7 @@ claude mcp add-json vmodal-robot '{"command":".../.venv-robot/bin/python","args"
 claude mcp list
 ```
 
+![claude mcp list](images/02_mcp_list.png)
 
 ### 4.2 Telemetry draft (first test)
 
@@ -67,6 +69,7 @@ Prompt: `telemetry_format_draft_from_file` on `ep_demo1/telemetry.jsonl`, no out
 
 The tool returned: JSONL, time field `t_ns` (int64, nanoseconds, must increase), 100 Hz, seven required float fields (`q`, `current`, `cmd_q` with 6 joints, `gripper`, `cmd_gripper`, `ee_pos` with 3, `ee_quat` with 4 in xyzw), and a list of unresolved `?` values (ranges, tolerances, video alignment settings). Clear and useful.
 
+![Telemetry draft](images/03_draft.png)
 
 ### 4.3 Authentication and `collection_list`
 
@@ -75,10 +78,11 @@ Before the key was set correctly, the server returned a clear message:
 
 With a valid key, `collection_list` returned 443 collections (440 video, 3 image). 366 of them are auto-named test collections; 57 have no index version.
 
+![collection_list](images/04_collection_list.png)
 
 ### 4.4 Format review skill (`ep_demo1`)
 
-The skill was run twice on `ep_demo1`. Both runs found no errors. The script first reported 2 warnings (the `cmd_*` fields were not marked as commands; the remaining `?` values were open). The output below is from the second run.
+The skill was run twice on `ep_demo1`. Both runs found no errors. The script first reported 2 warnings (the `cmd_*` fields were not marked as commands; the remaining `?` values were open). The screenshot below is from the second run.
 
 Measured values (same in both runs): 201 rows at 100 Hz (2.0 s), every sample gap exactly 10.0 ms, 60 scene frames at 29.95 fps, nearest telemetry sample to a frame at most 4.94 ms away (median about 2.5 ms), oldest command 9.95 ms, 0 frames without telemetry, 0 frames with a stale command. Gripper polarity matches its label (state follows the command by about 50 ms, correlation 0.96).
 
@@ -86,11 +90,15 @@ In the second run 13 of the 18 `?` values were filled from the data (format_id, 
 
 The first run additionally pointed out two data problems: a single current spike (j2 reads 9.0 A at row 50, all other samples 0.3 A) and a `start_time` in the meta file that is one year off from the telemetry (2026 against 2025). The second run mentioned neither (see issue 12).
 
+![Format review, part 1](images/05a_format_review.png)
+
+![Format review, part 2](images/05b_format_review.png)
 
 ### 4.5 Upload dry run (`ep_demo1`)
 
 `robot_episode_upload(dry_run=true)` with `robot_demo`, `dataset_rev=r1`: 0 errors, 0 warnings. Validated format, 201 rows with 0 bad rows, 100 Hz timing with no gaps, both cameras (60 frames, steady 30 fps), frame-to-telemetry alignment, command freshness. Nothing was uploaded; the dry run made no network calls and wrote local check files under `ztmp/mcp_robot/...` (this folder shows up as untracked in `git status`, see issue 13). The assistant also noted that the format used for the pass is a synthetic test fixture (`checked_by=synthetic_fixture`), so the pass shows that the pipeline works, not that a production format is approved, and that `success: false` in the meta file does not affect the verdict.
 
+![Dry run](images/06_dry_run.png)
 
 ### 4.6 Failure screen (`ep_demo1`, `ep_demo2` as peer)
 
@@ -98,6 +106,7 @@ The screen flagged one item on `ep_demo1`: `not_released [medium]` (gripper stil
 
 The telemetry shows the planted failure more clearly than the screen does: the gripper closes almost fully at 150 ms (state 0.99, which suggests nothing between the fingers, a missed grasp), then opens to 0.70 at 800 ms while still commanded closed (a drop). The screen caught neither. The contact sheet of the scene camera cannot confirm it, because the videos are synthetic colour-bar test patterns.
 
+![Failure screen](images/07_failure_screen.png)
 
 ### 4.7 Telemetry repair fixture
 
@@ -110,6 +119,7 @@ After adapting the fixture (see issue 8), the result was as designed:
 
 Repairs in `ep_demo1_corrupt`: out-of-order rows re-sorted, 5 duplicate timestamps dropped, 3 rows of missing `q` interpolated, 20 quaternions renormalized, 10 sign flips corrected, 4 `cmd_gripper` values clamped to 1, and one gap of about 70 ms filled with 6 inserted rows. The inserted rows look like real data and should be mentioned if the episode is used for training. In `ep_demo2_broken` the script correctly refused to repair: a run of 20 non-finite gripper values (limit 5) and a 310 ms gap (limit 150 ms).
 
+![Repair result](images/08_repair.png)
 
 ## 5. Issues
 
