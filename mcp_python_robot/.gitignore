@@ -1,2 +1,5 @@
 # Dedicated environment and generated local MCP configuration.
 .venv-robot/
+
+# Local dry-run outputs, caches, and scratch data (tracked fixtures stay tracked).
+/ztmp/

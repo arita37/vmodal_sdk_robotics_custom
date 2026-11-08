@@ -1,7 +1,7 @@
 """Batch dry-run QC of robot episodes: validator verdicts, metadata completeness, collection outliers.
 
 usage (from the MCP package root):
-  .venv/bin/python skills/vmodal-robot-qc-batch/scripts/qc_batch.py COLLECTION EPISODES_DIR DATASET_REV OUT_DIR
+  .venv-robot/bin/python skills/vmodal-robot-qc-batch/scripts/qc_batch.py COLLECTION EPISODES_DIR DATASET_REV OUT_DIR
       [--format_id NAME@V] [--robot_dir DIR] [--only uid,uid]
 
 EPISODES_DIR/<uid>/{cam_scene.mp4,cam_wrist.mp4?,frame_map.json,telemetry.jsonl,meta.json}

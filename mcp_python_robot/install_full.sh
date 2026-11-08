@@ -59,6 +59,20 @@ from src.mcp_server.robot_format import telemetry_format_draft_from_file
 draft = telemetry_format_draft_from_file(None, 'data/robot/ep_demo1/telemetry.jsonl')
 assert draft['output_path'] is None, 'Smoke test unexpectedly wrote a format file'
 print('Local telemetry smoke test passed.')
+
+# Exercise the local skill imports as well: the telemetry-only smoke test does not
+# load NumPy or the repair script's validator dependency chain.
+import subprocess
+import sys
+for skill, script in (
+    ('format-review', 'format_review'),
+    ('failure-screen', 'failure_screen'),
+    ('telemetry-repair', 'telemetry_repair'),
+):
+    subprocess.run([
+        sys.executable, f'skills/vmodal-robot-{skill}/scripts/{script}.py', '--help',
+    ], check=True, stdout=subprocess.DEVNULL)
+print('Local review, failure-screen and repair skill smoke tests passed.')
 PY
 
 stage='generating credential-free MCP configuration'

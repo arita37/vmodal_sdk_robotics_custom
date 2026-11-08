@@ -16,7 +16,7 @@ with `dry_run=True` and no SDK client, so nothing leaves the machine.
 ## Steps
 1. Confirm the binding: MCP `telemetry_format_list(format_id=...)`. Never silently re-bind a collection.
 2. From the MCP package root run:
-   `.venv/bin/python skills/vmodal-robot-qc-batch/scripts/qc_batch.py COLLECTION EPISODES_DIR DATASET_REV OUT_DIR`
+   `.venv-robot/bin/python skills/vmodal-robot-qc-batch/scripts/qc_batch.py COLLECTION EPISODES_DIR DATASET_REV OUT_DIR`
    (`--only take_01,take_02` for a subset). Note: a dry run writes local check reports and a
    `validated` manifest row under `MCP_ROBOT_DIR/COLLECTION/`; it never downgrades an uploaded row.
 3. Read `OUT_DIR/qc_report.json` → `summary`. Report a table: uid, frames, verdict, first error,

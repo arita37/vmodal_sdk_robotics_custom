@@ -9,7 +9,7 @@ corrects with explicit confirmation.
 
 ## Steps
 1. Audit (from the MCP package root):
-   `.venv/bin/python skills/vmodal-robot-sync-audit/scripts/sync_audit.py audit EPISODES_DIR OUT_DIR`
+   `.venv-robot/bin/python skills/vmodal-robot-sync-audit/scripts/sync_audit.py audit EPISODES_DIR OUT_DIR`
    One line per episode, then `AGGREGATE` and `RECOMMEND` lines; details in `OUT_DIR/sync_audit.json`.
 2. Structural issues (hard facts, act on them): decoded frames ≠ frame map, non-CFR video,
    video outside telemetry coverage by more than half a frame, wrist camera frozen ≥ 3 frames.

@@ -1,9 +1,9 @@
 """Episode-level outcome screen for robot demonstrations: catches failed/misfired demos that pass format checks.
 
 usage (from the MCP package root):
-  screen: .venv/bin/python skills/vmodal-robot-failure-screen/scripts/failure_screen.py screen EPISODES_DIR OUT_DIR
+  screen: .venv-robot/bin/python skills/vmodal-robot-failure-screen/scripts/failure_screen.py screen EPISODES_DIR OUT_DIR
               [--thresholds JSON] [--no_sheets]
-  review: .venv/bin/python skills/vmodal-robot-failure-screen/scripts/failure_screen.py review OUT_DIR/review_sheet.csv
+  review: .venv-robot/bin/python skills/vmodal-robot-failure-screen/scripts/failure_screen.py review OUT_DIR/review_sheet.csv
               REVIEWER OUT_DIR/exclusions.json
 
 screen writes: candidates.json (source=auto, review_status=unreviewed), review_sheet.csv (decision column EMPTY),
@@ -15,9 +15,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
 
-VERSION = "failure_screen_v1"
+VERSION = "failure_screen_v2"
 DEFAULTS = {"cmd_field": "cmd_gripper", "state_field": "gripper", "pos_field": "ee_pos",
-            "cmd_close_above": 0.5, "state_delta": 0.05, "min_duration_s": 2.0, "short_frac": 0.4,
+            "state_polarity": None, "opening_hold_s": 0.1, "cmd_close_above": 0.5, "state_delta": 0.05, "min_duration_s": 2.0, "short_frac": 0.4,
             "low_motion_frac": 0.25, "idle_speed_mps": 0.01, "idle_frac": 0.5, "end_pose_min_m": 0.05,
             "end_pose_mad_k": 4.0, "grip_width_z": 3.5, "duration_z": 3.5, "release_window_s": 0.5, "release_delay_s": 1.0}
 
@@ -44,7 +44,35 @@ def features(ep, th, polarity=None):
     first = int(np.argmax(closing)) if closing.any() else len(st)
     open_ref = float(np.median(st[:max(first, 1)]))          # state before the first close command
     releases = []
+    openings = []
+    closed_peak = None
     if polarity is not None:
+        # Compare only within uninterrupted close-command runs. Require both the
+        # held reference and the subsequent opening to persist, rejecting spikes.
+        signed = polarity * st
+        start = 0
+        peak = None
+        peak_t = None
+        drop_start = None
+        flagged = False
+        for i in range(len(st)):
+            if not closing[i]:
+                start, peak, peak_t, drop_start, flagged = i + 1, None, None, None, False
+                continue
+            left = max(start, int(np.searchsorted(t, t[i] - th["opening_hold_s"] * 1e9, side="right")) - 1)
+            if t[i] - t[start] >= th["opening_hold_s"] * 1e9:
+                held = float(np.min(signed[left:i + 1]))
+                closed_peak = held if closed_peak is None else max(closed_peak, held)
+                if peak is None or held > peak:
+                    peak, peak_t = held, int(t[i])
+            if peak is not None and peak - signed[i] >= th["state_delta"]:
+                drop_start = i if drop_start is None else drop_start
+                if not flagged and t[i] - t[drop_start] >= th["opening_hold_s"] * 1e9:
+                    openings.append({"t_start_ns": peak_t, "t_end_ns": int(t[i]),
+                                     "delta": float(peak - signed[i])})
+                    flagged = True
+            else:
+                drop_start = None
         for i in np.nonzero(closing[:-1] & ~closing[1:])[0] + 1:   # command falls: open requested
             held = float(np.median(st[max(0, i - 20):i]))           # state just before the release
             half = open_ref + (held - open_ref) / 2                 # response = time to get halfway open
@@ -54,7 +82,8 @@ def features(ep, th, polarity=None):
     return {"uid": ep.name, "t0": int(t[0]), "t1": int(t[-1]), "duration_s": n_frames / 30,
             "meta_success": meta.get("success"), "close_cmd": bool(closing.any()),
             "first_close_t": int(t[np.argmax(closing)]) if closing.any() else None,
-            "state_open": open_ref, "releases": releases,
+            "state_open": open_ref, "observed_open_before_close": 0 < first < len(st),
+            "releases": releases, "openings": openings, "closed_peak": closed_peak,
             "state_closed": float(np.median(st[closing])) if closing.any() else None,
             "state_range": float(st.max() - st.min()),
             "closed_at_end": bool(closing[t >= end].all()),
@@ -71,8 +100,18 @@ def cmd_screen(a):
     eps = sorted(p for p in Path(a.episodes_dir).iterdir() if (p / "telemetry.jsonl").exists())
     F = [features(ep, th) for ep in eps]
     # gripper polarity from data: does the state go up or down when the close command is on?
-    pairs = [(f["state_closed"], f["state_open"]) for f in F if f["state_closed"] is not None]
-    polarity = 1 if statistics.median(c - o for c, o in pairs) > 0 else -1
+    if not F:
+        sys.exit("no episodes with telemetry.jsonl found")
+    pairs = [f["state_closed"] - f["state_open"] for f in F
+             if f["observed_open_before_close"] and
+             abs(f["state_closed"] - f["state_open"]) >= th["state_delta"]]
+    polarity = th["state_polarity"]
+    if polarity not in (None, -1, 1):
+        sys.exit("state_polarity must be -1, 1, or null")
+    if polarity is None and pairs and abs(statistics.median(pairs)) >= th["state_delta"]:
+        polarity = 1 if statistics.median(pairs) > 0 else -1
+    polarity_label = ("unknown (no informative close transition)" if polarity is None else
+                      "state increases when closing" if polarity > 0 else "state decreases when closing")
     F = [features(ep, th, polarity) for ep in eps]
     durz, dmed, _ = robust_z([f["duration_s"] for f in F])
     path_med = statistics.median(f["path_m"] for f in F)
@@ -80,15 +119,26 @@ def cmd_screen(a):
     end_med = np.median(endp, axis=0)
     end_d = np.linalg.norm(endp - end_med, axis=1)
     end_mad = float(np.median(np.abs(end_d - np.median(end_d)))) * 1.4826
-    widths = [(i, polarity * f["state_closed"]) for i, f in enumerate(F) if f["state_closed"] is not None]
-    wz = dict(zip([i for i, _ in widths], robust_z([w for _, w in widths])[0])) if len(widths) >= 5 else {}
+    # Leave the candidate out of its own baseline. A fixed minimum delta makes
+    # comparisons usable with one peer or zero MAD; robust spread protects varied sets.
+    widths = [(i, f["closed_peak"]) for i, f in enumerate(F)
+              if f["closed_peak"] is not None and
+              (not f["observed_open_before_close"] or
+               polarity * (f["state_closed"] - f["state_open"]) >= th["state_delta"])]
+    width_flags = {}
+    for i, width in widths:
+        peers = [v for j, v in widths if j != i]
+        if peers:
+            _, med, mad = robust_z(peers)
+            if width - med > max(th["state_delta"], th["grip_width_z"] * mad):
+                width_flags[i] = (width - med, len(peers))
     done = [r["delay_s"] for f in F for r in f["releases"] if r["reopened"]]
     rel_med = statistics.median(done) if done else 0.0
     rel_limit = max(th["release_delay_s"], 3 * rel_med)
     cands = []
     def add(f, rule, sev, evidence, t0=None, t1=None):
         cands.append({"episode_uid": f["uid"], "rule": rule, "severity": sev, "evidence": evidence,
-                      "t_start_ns": t0 or f["t0"], "t_end_ns": t1 or f["t1"], "source": "auto",
+                      "t_start_ns": f["t0"] if t0 is None else t0, "t_end_ns": f["t1"] if t1 is None else t1, "source": "auto",
                       "review_status": "unreviewed", "detector": VERSION, "thresholds_sha": th_sha})
     for i, f in enumerate(F):
         if f["duration_s"] < max(th["min_duration_s"], th["short_frac"] * dmed):
@@ -97,12 +147,20 @@ def cmd_screen(a):
             add(f, "duration_outlier", "low", f"{f['duration_s']:.2f} s, robust z {durz[i]:+.1f}")
         if not f["close_cmd"]:
             add(f, "no_close_command", "high", f"{th['cmd_field']} never above {th['cmd_close_above']}")
-        elif polarity * (f["state_closed"] - f["state_open"]) < th["state_delta"]:
+        elif (polarity is not None and f["observed_open_before_close"] and
+              polarity * (f["state_closed"] - f["state_open"]) < th["state_delta"]):
             add(f, "gripper_did_not_close", "high", f"state {f['state_open']:.3f} -> {f['state_closed']:.3f} while commanded closed",
                 f["first_close_t"])
-        elif i in wz and wz[i] > th["grip_width_z"]:
-            add(f, "closed_further_than_peers", "medium", f"closed state {f['state_closed']:.3f}, z {wz[i]:+.1f}: possible empty grasp",
+        if i in width_flags:
+            delta, count = width_flags[i]
+            add(f, "closed_further_than_peers", "medium",
+                f"sustained closed state exceeds median of {count} peer(s) by {delta:.3f}: possible empty grasp",
                 f["first_close_t"])
+        for opening in f["openings"]:
+            add(f, "opens_while_commanded_closed", "medium",
+                f"state opened by {opening['delta']:.3f} while close command remained on "
+                f"for at least {th['opening_hold_s']} s: possible drop",
+                opening["t_start_ns"], opening["t_end_ns"])
         for rel in f["releases"]:
             # censored releases (episode ended first) count only if they already exceed the limit
             if rel["delay_s"] > rel_limit:
@@ -123,7 +181,7 @@ def cmd_screen(a):
         by.setdefault(c["episode_uid"], []).append(c)
     out = Path(a.out_dir); out.mkdir(parents=True, exist_ok=True)
     (out / "candidates.json").write_text(json.dumps({"detector": VERSION, "thresholds": th, "thresholds_sha": th_sha,
-        "gripper_polarity": "state increases when closing" if polarity > 0 else "state decreases when closing",
+        "gripper_polarity": polarity_label,
         "candidates": cands}, indent=1))
     with open(out / "review_sheet.csv", "w", newline="") as fh:
         w = csv.writer(fh)
@@ -145,7 +203,7 @@ def cmd_screen(a):
             sel = "+".join(f"eq(n\\,{k})" for k in picks)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(ep / "cam_scene.mp4"), "-vf",
                             f"select='{sel}',scale=256:-1,tile={len(picks)}x1", "-frames:v", "1", str(cs / f"{uid}.png")], check=True)
-    print(f"gripper polarity (from data): {'state increases when closing' if polarity > 0 else 'state decreases when closing'}")
+    print(f"gripper polarity: {polarity_label}")
     for f in F:
         fl = by.get(f["uid"], [])
         print(f"{f['uid']:<12} meta_success={str(f['meta_success']):<5} flags={', '.join(c['rule'] + '[' + c['severity'][0] + ']' for c in fl) or '-'}")

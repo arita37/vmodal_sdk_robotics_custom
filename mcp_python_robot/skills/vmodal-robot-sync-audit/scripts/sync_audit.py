@@ -1,8 +1,8 @@
 """Audit camera/telemetry synchronization per episode and estimate video<->telemetry lag from motion.
 
 usage (from the MCP package root):
-  audit: .venv/bin/python skills/vmodal-robot-sync-audit/scripts/sync_audit.py audit EPISODES_DIR OUT_DIR [--only uid,..]
-  fix:   .venv/bin/python skills/vmodal-robot-sync-audit/scripts/sync_audit.py shift EPISODES_DIR OUT_DIR --offset_ms X [--only ...]
+  audit: .venv-robot/bin/python skills/vmodal-robot-sync-audit/scripts/sync_audit.py audit EPISODES_DIR OUT_DIR [--only uid,..]
+  fix:   .venv-robot/bin/python skills/vmodal-robot-sync-audit/scripts/sync_audit.py shift EPISODES_DIR OUT_DIR --offset_ms X [--only ...]
 
 audit: decoded frames vs frame map, 30/1 CFR, wrist offsets/repeats, telemetry coverage of the
 video, and lag_ms = shift that best aligns image motion energy with robot speed (positive: telemetry

@@ -38,12 +38,20 @@ mcp_test_unit() {
   ## Usage:
     bash test.sh test
   '
+  python -m unittest discover -s tests -p test_skill_install_dependencies.py
+  python -m unittest discover -s tests -p test_registration_name.py
+  python -m unittest discover -s tests -p test_format_review_ranges.py
+  python -m unittest discover -s tests -p test_failure_screen.py
+  python -m unittest discover -s tests -p test_repair_fixture.py
+  python -m unittest discover -s tests -p test_dry_run_gitignore.py
+  python -m unittest discover -s tests -p test_format_review_diagnostics.py
   python -m unittest discover -s tests -p test_install_full.py
   python -m unittest discover -s tests -p test_install.py
   python -m unittest discover -s tests -p test_video_upload.py
   python tests/test_utils.py test_all
   python tests/test_main_mcp.py test_all
   python tests/test_cli.py test_all
+  python -m unittest discover -s tests -p test_robot_diagnostics.py
   python tests/test_robot_format.py test_all
   python tests/test_robot.py test_all
   python tests/test_robot_similar.py test_all

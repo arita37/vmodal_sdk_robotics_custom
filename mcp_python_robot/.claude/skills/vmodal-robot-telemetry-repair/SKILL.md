@@ -12,7 +12,7 @@ invent data beyond tight limits. Sources are never modified; every change is cou
    problem (wrong unit/range), use **vmodal-robot-format-review** instead; do not "repair" data
    to fit a wrong spec.
 2. From the MCP package root:
-   `.venv/bin/python skills/vmodal-robot-telemetry-repair/scripts/telemetry_repair.py EPISODES_DIR OUT_DIR --format_id NAME@V [--only uid,...]`
+   `.venv-robot/bin/python skills/vmodal-robot-telemetry-repair/scripts/telemetry_repair.py EPISODES_DIR OUT_DIR --format_id NAME@V [--only uid,...]`
 3. Report per episode: before/after verdict, ops applied (counts), and every `unrepaired` item.
 4. Re-run **vmodal-robot-qc-batch** on `OUT_DIR` (it re-checks video alignment too). Only
    repaired episodes that pass go forward; point uploads at `OUT_DIR`, not the source folder.
@@ -35,6 +35,21 @@ the limits silently. Interpolated rows are real-looking data: mention the insert
 when the episode is used for training.
 
 ## Test fixture
-`python skills/vmodal-robot-telemetry-repair/tests/make_corrupt.py EPISODES_DIR OUT uid [uid2]`
-builds `<uid>_corrupt` (all repairable → must end `pass`) and `<uid2>_broken` (must stay `reject`
-with two `unrepaired` items).
+`.venv-robot/bin/python skills/vmodal-robot-telemetry-repair/tests/make_corrupt.py EPISODES_DIR OUT uid [uid2]`
+builds `<uid>_corrupt` (planted defects are all repairable) and `<uid2>_broken`
+(two planted `unrepaired` items). With otherwise valid input, the first ends `pass`
+and the second stays `reject`. Existing source defects are not removed: the bundled
+demo1 current spike still rejects under the strict current range. Regression tests
+use a temporary fixture-only current range of [-10, 10] to isolate mechanical
+repair behavior; do not use that permissive range as a production safety limit.
+
+The fixture expects clean, uniformly sampled 100 Hz input with at least 80 telemetry
+rows (not counting an optional JSONL header). Defect positions scale with episode
+length; runs remain long enough to exercise each repair limit. Smaller or differently
+sampled inputs fail with a clear error before output is written rather than silently
+omitting defects. Removing 6 samples creates a **70 ms** neighbor-to-neighbor gap;
+removing 30 creates a **310 ms** gap. JSONL headers are preserved with the new UID.
+The bundled 201-row demos can be used directly, including their sibling `meta/` files.
+
+Regression tests (from the MCP package root):
+`.venv-robot/bin/python -m unittest discover -s tests -p test_repair_fixture.py`

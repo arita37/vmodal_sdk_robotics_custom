@@ -1,7 +1,7 @@
 """Repair common telemetry defects into a NEW episode folder, with a per-episode repair log and before/after checks.
 
 usage (from the MCP package root):
-  .venv/bin/python skills/vmodal-robot-telemetry-repair/scripts/telemetry_repair.py EPISODES_DIR OUT_DIR
+  .venv-robot/bin/python skills/vmodal-robot-telemetry-repair/scripts/telemetry_repair.py EPISODES_DIR OUT_DIR
       (--spec SPEC_JSON | --format_id NAME@V) [--only uid,uid] [--max_nan_run 5] [--max_interp_ms 150]
       [--clamp_tol 0.02] [--no_quat_continuity]
 

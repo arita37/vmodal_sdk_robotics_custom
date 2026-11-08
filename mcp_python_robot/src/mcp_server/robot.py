@@ -19,6 +19,8 @@ from src.mcp_server.utils import (RobotError, os_json_read, os_json_write, os_ro
     os_robot_root, str_robot_key, str_json_sha, os_file_sha, os_video_cut, os_video_frame)
 from src.mcp_server.robot_format import spec_load, telemetry_check, frames_validate
 
+from src.mcp_server.robot_diagnostics import metadata_start_time_warnings
+
 SYNC_KEYS = ("sync_offset_ms_max", "sync_offset_ms_mean", "wrist_dt_ms_max", "wrist_dt_ms_mean",
              "n_dropped", "cmd_age_ms_max", "cmd_latency_ms")
 
@@ -109,6 +111,7 @@ async def episode_upload(cfg, collection_name, episode_uid, video_scene, telemet
     if episode_uid in old and (old[episode_uid]["t0_ns"] != frames[0]["t_scene_ns"] or old[episode_uid]["n_frames"] != len(frames)):
         raise RobotError("episode identity changed; choose a new collection",409)
     report = telemetry_check(spec,header,rows,frames,videos,meta.get("length",meta.get("n_frames")))
+    report["warnings"].extend(metadata_start_time_warnings(spec, rows, meta))
     report["episode_uid"] = episode_uid
     folder = os_robot_root(cfg)/collection_name
     report_path = os_json_write(folder/"checks"/f"{episode_uid}.json",report)

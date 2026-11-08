@@ -16,6 +16,8 @@ def build():
     root = Path(__file__).resolve().parent
     spec = os_json_read(root/"v1"/"input_spec.json")
     spec.update(checked_by="synthetic_fixture",checked_at="2026-11-03",description="Synthetic test fixture, not a customer-approved production format")
+    current = next(f for f in spec["fields"] if f["name"] == "current")
+    current.update(range=[-1, 1], note="Synthetic fixture bound only: nominal 0.1–0.3 A, planted 9 A spike must fail. Not a robot safety rating.")
     os_json_write(root/"robot"/"xarm6_gripper_100hz.format.json",spec)
     frames_all, table = [],[]
     for ep,uid in enumerate(("ep_demo1","ep_demo2")):
@@ -39,6 +41,7 @@ def build():
         os_json_write(root/"robot"/"meta"/(uid+".json"),{"episode_uid":uid,"robot_id":"xarm_demo","operator_id":"fixture",
             "task":"put the cup in the bin","success":ep==1,"duration_s":2,"length":60,"start_time":"2026-10-22T10:00:00Z",
             "sync_offset_ms_max":1.0,"sync_offset_ms_mean":0.5,"n_dropped":0,"cmd_latency_ms":0})
+        os_json_write(folder/"meta.json", os_json_read(root/"robot"/"meta"/(uid+".json")))
         frames_all.extend(frames)
         item = {"episode_index":ep,"length":60,"tasks":["put the cup in the bin"],"dataset_from_index":ep*60,"dataset_to_index":(ep+1)*60}
         for cam in ("cam_scene","cam_wrist"):

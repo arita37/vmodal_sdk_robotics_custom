@@ -142,9 +142,9 @@ mcp_print_claude() {
   local pycmd
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    printf '%s\n' 'claude mcp add vmodal --scope local -e api_key=PUT_API_KEY_HERE -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
+    printf '%s\n' 'claude mcp add vmodal-robot --scope local -e api_key=PUT_API_KEY_HERE -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
   else
-    printf 'claude mcp add vmodal --scope local -e api_key=PUT_API_KEY_HERE -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
+    printf 'claude mcp add vmodal-robot --scope local -e api_key=PUT_API_KEY_HERE -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
   fi
   printf '%s\n' 'claude mcp list'
 }
@@ -157,9 +157,9 @@ mcp_print_codex() {
   local pycmd
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    printf '%s\n' 'codex mcp add --env api_key=PUT_API_KEY_HERE vmodal -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
+    printf '%s\n' 'codex mcp add --env api_key=PUT_API_KEY_HERE vmodal-robot -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
   else
-    printf 'codex mcp add --env api_key=PUT_API_KEY_HERE vmodal -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
+    printf 'codex mcp add --env api_key=PUT_API_KEY_HERE vmodal-robot -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
   fi
   printf '%s\n' 'codex mcp list'
 }
@@ -172,9 +172,9 @@ mcp_print_copilot() {
   local pycmd
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    printf '%s\n' 'copilot mcp add vmodal --env api_key=PUT_API_KEY_HERE -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
+    printf '%s\n' 'copilot mcp add vmodal-robot --env api_key=PUT_API_KEY_HERE -- py -3 -m src.mcp_server.main_mcp run --transport stdio'
   else
-    printf 'copilot mcp add vmodal --env api_key=PUT_API_KEY_HERE -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
+    printf 'copilot mcp add vmodal-robot --env api_key=PUT_API_KEY_HERE -- %s -m src.mcp_server.main_mcp run --transport stdio\n' "$pycmd"
   fi
   printf '%s\n' 'copilot mcp list'
 }
@@ -187,9 +187,9 @@ mcp_print_copilot_vscode() {
   local pycmd
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    printf '%s\n' "code --add-mcp '{\"name\":\"vmodal\",\"command\":\"py\",\"args\":[\"-3\",\"-m\",\"src.mcp_server.main_mcp\",\"run\",\"--transport\",\"stdio\"],\"env\":{\"api_key\":\"PUT_API_KEY_HERE\"}}'"
+    printf '%s\n' "code --add-mcp '{\"name\":\"vmodal-robot\",\"command\":\"py\",\"args\":[\"-3\",\"-m\",\"src.mcp_server.main_mcp\",\"run\",\"--transport\",\"stdio\"],\"env\":{\"api_key\":\"PUT_API_KEY_HERE\"}}'"
   else
-    printf "code --add-mcp '{\"name\":\"vmodal\",\"command\":\"%s\",\"args\":[\"-m\",\"src.mcp_server.main_mcp\",\"run\",\"--transport\",\"stdio\"],\"env\":{\"api_key\":\"PUT_API_KEY_HERE\"}}'\n" "$pycmd"
+    printf "code --add-mcp '{\"name\":\"vmodal-robot\",\"command\":\"%s\",\"args\":[\"-m\",\"src.mcp_server.main_mcp\",\"run\",\"--transport\",\"stdio\"],\"env\":{\"api_key\":\"PUT_API_KEY_HERE\"}}'\n" "$pycmd"
   fi
   printf '%s\n' 'Use “MCP: List Servers” in VS Code to verify it for GitHub Copilot.'
 }
@@ -203,9 +203,9 @@ mcp_print_cursor() {
   pycmd="$(mcp_py_bin)"
   printf '%s\n' 'Save this as .cursor/mcp.json for project scope or ~/.cursor/mcp.json for global scope:'
   if [ "$pycmd" = "py" ]; then
-    printf '%s\n' '{"mcpServers":{"vmodal":{"command":"py","args":["-3","-m","src.mcp_server.main_mcp","run","--transport","stdio"],"env":{"api_key":"PUT_API_KEY_HERE"}}}}'
+    printf '%s\n' '{"mcpServers":{"vmodal-robot":{"command":"py","args":["-3","-m","src.mcp_server.main_mcp","run","--transport","stdio"],"env":{"api_key":"PUT_API_KEY_HERE"}}}}'
   else
-    printf '{"mcpServers":{"vmodal":{"command":"%s","args":["-m","src.mcp_server.main_mcp","run","--transport","stdio"],"env":{"api_key":"PUT_API_KEY_HERE"}}}}\n' "$pycmd"
+    printf '{"mcpServers":{"vmodal-robot":{"command":"%s","args":["-m","src.mcp_server.main_mcp","run","--transport","stdio"],"env":{"api_key":"PUT_API_KEY_HERE"}}}}\n' "$pycmd"
   fi
 }
 
@@ -223,9 +223,9 @@ mcp_register_claude_local() {
   scope="${2:-local}"
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    claude mcp add vmodal --scope "$scope" --env "api_key=$key" -- py -3 -m src.mcp_server.main_mcp run --transport stdio
+    claude mcp add vmodal-robot --scope "$scope" --env "api_key=$key" -- py -3 -m src.mcp_server.main_mcp run --transport stdio
   else
-    claude mcp add vmodal --scope "$scope" --env "api_key=$key" -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
+    claude mcp add vmodal-robot --scope "$scope" --env "api_key=$key" -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
   fi
   claude mcp list
 }
@@ -243,9 +243,9 @@ mcp_register_codex() {
   key="$(mcp_api_key "${1:-}")"
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    codex mcp add --env "api_key=$key" vmodal -- py -3 -m src.mcp_server.main_mcp run --transport stdio
+    codex mcp add --env "api_key=$key" vmodal-robot -- py -3 -m src.mcp_server.main_mcp run --transport stdio
   else
-    codex mcp add --env "api_key=$key" vmodal -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
+    codex mcp add --env "api_key=$key" vmodal-robot -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
   fi
   codex mcp list
 }
@@ -263,9 +263,9 @@ mcp_register_copilot() {
   key="$(mcp_api_key "${1:-}")"
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    copilot mcp add vmodal --env "api_key=$key" -- py -3 -m src.mcp_server.main_mcp run --transport stdio
+    copilot mcp add vmodal-robot --env "api_key=$key" -- py -3 -m src.mcp_server.main_mcp run --transport stdio
   else
-    copilot mcp add vmodal --env "api_key=$key" -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
+    copilot mcp add vmodal-robot --env "api_key=$key" -- "$pycmd" -m src.mcp_server.main_mcp run --transport stdio
   fi
   copilot mcp list
 }
@@ -282,9 +282,9 @@ mcp_register_copilot_vscode() {
   local pycmd config
   pycmd="$(mcp_py_bin)"
   if [ "$pycmd" = "py" ]; then
-    config='{"name":"vmodal","command":"py","args":["-3","-m","src.mcp_server.main_mcp","run","--transport","stdio"]}'
+    config='{"name":"vmodal-robot","command":"py","args":["-3","-m","src.mcp_server.main_mcp","run","--transport","stdio"]}'
   else
-    printf -v config '{"name":"vmodal","command":"%s","args":["-m","src.mcp_server.main_mcp","run","--transport","stdio"]}' "$pycmd"
+    printf -v config '{"name":"vmodal-robot","command":"%s","args":["-m","src.mcp_server.main_mcp","run","--transport","stdio"]}' "$pycmd"
   fi
   code --add-mcp "$config"
 }
@@ -333,7 +333,7 @@ mcp_cursor() {
   encoded="${encoded//+/%2B}"
   encoded="${encoded//\//%2F}"
   encoded="${encoded//=/%3D}"
-  url="https://cursor.com/en/install-mcp?name=vmodal&config=$encoded"
+  url="https://cursor.com/en/install-mcp?name=vmodal-robot&config=$encoded"
   mcp_py -m webbrowser "$url"
 }
 

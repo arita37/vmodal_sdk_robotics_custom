@@ -12,7 +12,7 @@ the exact frame/action alignment training will use, after excluding reviewed fai
    **vmodal-robot-failure-screen** (`exclusions.json`). Quaternions are repaired with
    **vmodal-robot-telemetry-repair** if you use them as features.
 2. From the MCP package root:
-   `.venv/bin/python skills/vmodal-robot-norm-stats/scripts/norm_stats.py EPISODES_DIR OUT_DIR --format_id NAME@V --exclusions exclusions.json [--state q,gripper] [--action cmd_q,cmd_gripper] [--export OUT_DIR/export]`
+   `.venv-robot/bin/python skills/vmodal-robot-norm-stats/scripts/norm_stats.py EPISODES_DIR OUT_DIR --format_id NAME@V --exclusions exclusions.json [--state q,gripper] [--action cmd_q,cmd_gripper] [--export OUT_DIR/export]`
    Choose `--state`/`--action` with the user: field names come from the format spec, and
    dimension names come from its `names`.
 3. Report: episodes/frames used and excluded, q01–q99 per dimension, zero-variance dims,
