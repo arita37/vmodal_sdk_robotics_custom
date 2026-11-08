@@ -66,7 +66,7 @@ class ClaudeInstallTests(unittest.TestCase):
         self.run_installer(action, key)
         calls = [json.loads(line) for line in self.log.read_text().splitlines()]
         self.assertEqual(calls, [
-            ["mcp", "add", "vmodal", "--scope", scope, "--env", f"api_key={key}",
+            ["mcp", "add", "vmodal-robot", "--scope", scope, "--env", f"api_key={key}",
              "--", *self.expected_python(), "-m", "src.mcp_server.main_mcp",
              "run", "--transport", "stdio"],
             ["mcp", "list"],
@@ -89,7 +89,7 @@ class ClaudeInstallTests(unittest.TestCase):
                 self.env["PYTHON_BIN"] = launcher
                 lines = self.run_installer("print_claude").splitlines()
                 self.assertEqual(shlex.split(lines[0]), [
-                    "claude", "mcp", "add", "vmodal", "--scope", "local", "-e",
+                    "claude", "mcp", "add", "vmodal-robot", "--scope", "local", "-e",
                     "api_key=PUT_API_KEY_HERE", "--", *self.expected_python(),
                     "-m", "src.mcp_server.main_mcp", "run", "--transport", "stdio",
                 ])

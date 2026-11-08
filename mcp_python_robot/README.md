@@ -18,14 +18,14 @@ Windows users should use WSL; native Windows is not supported by this installer.
 From a directory where you want to keep the project, copy this single line:
 
 ```bash
-git clone --branch docs/robot-mcp-beginner-readme --single-branch https://github.com/arita37/vmodal_sdk_robotics_custom.git vmodal-robot && bash vmodal-robot/mcp_python_robot/install_full.sh
+git clone --branch main --single-branch https://github.com/arita37/vmodal_sdk_robotics_custom.git vmodal-robot && bash vmodal-robot/mcp_python_robot/install_full.sh
 ```
 
-This targets the branch containing this installer. Keep the checkout in place: the
+This targets the maintained `main` branch. Keep the checkout in place: the
 package is installed in editable mode. Git authentication is required if your account
 needs it to access the repository.
 
-**Already cloned it?** From the checkout's `mcp_python_robot` directory on this branch:
+**Already cloned it?** From an up-to-date `main` checkout's `mcp_python_robot` directory:
 
 ```bash
 bash install_full.sh
@@ -41,6 +41,23 @@ package and dependencies, checks dependency consistency, tests the bundled telem
 locally, and prints a ready-to-use **absolute-path MCP configuration and test prompt**.
 No environment activation or API key is needed. The package is `vmodal_mcp_robot`;
 the executable is `.venv-robot/bin/vmodal-mcp-robot`.
+
+### Local skill dependencies
+
+The installer includes NumPy for the local review, failure-screen, repair, sync-audit
+and normalization skills. Fire, filelock, Pillow and the VModal SDK are also installed
+as package dependencies, including the repair validator's imports. No separate scratch
+Python environment or manual dependency installation is needed.
+
+Run skill commands from `mcp_python_robot` with `.venv-robot/bin/python`, the same
+interpreter used by the MCP server. For example:
+
+```bash
+.venv-robot/bin/python skills/vmodal-robot-telemetry-repair/scripts/telemetry_repair.py --help
+```
+
+`install_full.sh` checks the review, failure-screen and repair entry points without
+processing or uploading episodes. Rerun it to update an existing installation.
 
 ### 2. Connect your assistant
 
@@ -68,17 +85,45 @@ need to run a separate server terminal. The installer does not automatically reg
 clients or change existing credentials.
 
 For **authenticated upload and search**, from `mcp_python_robot`, you can use the
-existing registration helper with the dedicated interpreter:
+existing registration helper with the dedicated interpreter. In a trusted **Bash**
+terminal, paste this block, enter your key at the hidden prompt, and press Enter.
+Replace `codex` with `claude`, `cursor`, or `copilot` as appropriate; the matching
+client CLI must be installed.
 
 ```bash
-PYTHON_BIN="$PWD/.venv-robot/bin/python" bash install_mcp.sh codex
+(
+  set +x  # Do not trace commands containing the key.
+  IFS= read -r -s -p 'VModal api_key (hidden): ' api_key || exit 1
+  printf '\n'
+  if [ -z "$api_key" ]; then
+    printf 'No key entered; registration cancelled.\n' >&2
+    exit 1
+  fi
+  export api_key
+  PYTHON_BIN="$PWD/.venv-robot/bin/python" bash install_mcp.sh codex
+)
 ```
 
-Set `api_key` securely in the terminal environment first; replace `codex` with `claude`,
-`cursor`, or `copilot` as appropriate. The matching client CLI must be installed.
-Registration stores the key in client configuration; Cursor opens an install link
-containing the key. Never paste keys into chat, commit them, or share that link.
-See [configuration](docs/env_vars.md) before enabling network operations.
+The prompt keeps the key out of terminal echo and shell command history. The
+subshell discards the key variable it read when registration finishes or fails;
+it does not remove a key already saved in client configuration. Do not type a
+literal key into a command or run the helper with shell tracing (`bash -x`).
+
+All registration helpers use the same `vmodal-robot` name as the generated config.
+If your client refuses to add an existing entry, edit that entry to add `api_key`
+rather than registering a second name. Keep the same client scope as the original
+entry. Older helpers registered `vmodal`; inspect its command and interpreter before
+manually removing a duplicate, since it may be an unrelated generic VModal server.
+The helpers do not remove existing servers.
+
+Registration stores the key in client configuration, not an encrypted secret vault.
+The existing helpers pass it through subprocess environments and client command-line
+arguments, which local process inspection may expose. Cursor opens an install link
+containing the key in a base64-encoded (not encrypted) configuration; treat that URL
+and browser history as secrets. Use a trusted machine, protect client configuration
+and backups, and never paste keys into chat, commit them, or share that link.
+Reconnect the client after registration. See [configuration](docs/env_vars.md) before
+enabling network operations.
 
 ### If installation fails
 
@@ -124,6 +169,24 @@ installed into.
 
 ## Details
 
+### Supported inputs and MCAP
+
+**MCAP is not directly supported.** This checkout has no MCAP reader or bundled
+MCAP converter; do not pass a `.mcap` recording to telemetry or upload tools.
+Telemetry inputs support JSON arrays, `{header,rows}` JSON, JSONL, gzip JSONL
+(`.jsonl.gz`), and Parquet. Episode uploads use separate camera videos, telemetry,
+frame maps and metadata; dataset uploads read the documented LeRobot v3 layout.
+
+For MCAP recordings, use an external converter appropriate to your message schemas
+to extract telemetry into a supported format and create the camera clips, frame map
+and episode metadata. Preserve integer nanosecond capture timestamps, units, field
+shapes and camera alignment; renaming the file is not conversion. The clips must
+meet the decoded 30 fps and frame-map requirements in the
+[robot episode contract](docs/robot_contract.md). Review/register the converted
+telemetry format, then run a local dry run before any upload. Successful format and
+alignment checks do not verify that an external converter preserved every source
+message correctly.
+
 ### What to do next
 
 1. Review a draft's `?` values with the data owner.
@@ -135,6 +198,11 @@ Local draft/check/dry-run tools work without credentials. Dry runs can write loc
 artifacts; they do not upload data. Network operations require `api_key`.
 Telemetry and frame maps remain in the configured local robot directory in Phase A.
 
+A checkout can already contain a locally registered demo v1 under `ztmp/mcp_robot`;
+the installer and format review do not register it. Before the walkthrough, see
+[registry provenance and a fresh isolated demo](docs/env_vars.md#local-format-registry-why-a-demo-format-may-already-exist),
+especially if registration reports an immutable-version conflict. Preserve existing state.
+
 The public `vmodal` 1.0.0 SDK is supported: robot uploads use a temporary, same-content
 episode-named upload alias when the SDK lacks `video_filename`. Newer APIs receive
 `video_filename` and `reduce_size=False`. No unpublished minimum SDK version is required.
@@ -144,17 +212,24 @@ variant into an interpreter. The copied generic MCP bootstrap URLs are not used.
 See [robot contracts and examples](docs/robot_contract.md), [all tool contracts](docs/tool_contract.md),
 [configuration](docs/env_vars.md), and [similar-failure skill](skills/vmodal-robot-similar/SKILL.md).
 
-### Walkthrough: inspect a robot episode and compare a successful grasp
+### Walkthrough: inspect synthetic robot fixtures
 
-Use the committed [data/robot](data/robot/README.md) samples to validate a two-camera
-handoff and inspect telemetry around a suspected failure. Each episode has 60 frames
+Use the committed [data/robot](data/robot/README.md) samples to exercise two-camera
+checks and inspect deliberately planted telemetry defects. **These are synthetic test
+fixtures, not recordings of a robot task or evidence of training-data quality.**
+Each episode has 60 frames
 at encoded 30 fps and 100 Hz telemetry. Both episodes have a 9.0 A j2 current spike
 at 500 ms. `ep_demo1` also has planted grasp-miss and gripper-opening events and
-`success=false`; `ep_demo2` provides a steady-grasp comparison with `success=true`.
+`success=false`; `ep_demo2` simulates a steady grasp with `success=true`.
+Both `q` and `cmd_q` stay at 0.1 rad for every joint in both episodes. These success
+labels are authored fixture metadata, not independently verified task outcomes.
 The gripper telemetry, not the shared current spike, distinguishes the episodes.
 The task metadata is `put the cup in the bin`.
 The videos are synthetic test patterns: use them to check frame alignment and retrieval,
-not to establish visual evidence of a failed grasp.
+not to establish visual evidence of a grasp, drop, or task completion. A format/alignment
+pass or a failure-screen flag cannot establish whether an episode is useful for training,
+physically realistic, or safe. Review real footage, task outcomes, representative motion,
+and owner-approved limits before making those judgments.
 
 Start the MCP server with `mcp_python_robot` as its working directory, or
 replace the paths below with absolute paths on the MCP server. These JSON objects show
@@ -162,7 +237,8 @@ MCP tool names and arguments; submit them through your connected assistant/clien
 
 #### 1. Register the sample telemetry format and check alignment
 
-The supplied format is reviewed synthetic-fixture data, suitable for this demo collection.
+The supplied format has fixture-only sign-off (`checked_by=synthetic_fixture`),
+not production approval. Its current bound is [-1, 1] A for this negative test.
 Registration binds it locally to `robot_demo`; it does not upload data or create a remote
 collection. These steps need no API key.
 
@@ -171,8 +247,7 @@ collection. These steps need no API key.
   "tool": "update_json_format_specs_from_file",
   "arguments": {
     "path": "data/robot/xarm6_gripper_100hz.format.json",
-    "collection_name": "robot_demo",
-    "sample_path": "data/robot/ep_demo1/telemetry.jsonl"
+    "collection_name": "robot_demo"
   }
 }
 ```
@@ -192,7 +267,11 @@ collection. These steps need no API key.
 }
 ```
 
-Expect `verdict=pass`, including frame-count, telemetry-coverage and command-age checks.
+Register without `sample_path`: this intentionally defective sample would fail the
+registration-time sample check. Check it separately as above. With the current bundled
+format, expect `verdict=reject` and `row 50 current: outside range`, plus a current-spike
+warning. Inspect the frame-count, telemetry-coverage and command-age results separately.
+A passing alignment check does not cancel a telemetry range failure.
 For your own data, first use `telemetry_format_draft_from_file`, resolve every `?` with
 the data owner, and register the reviewed spec. Do not reuse synthetic reviewer provenance.
 
@@ -213,12 +292,22 @@ the data owner, and register the reviewed spec. Do not reuse synthetic reviewer 
 }
 ```
 
-Expect two `validated` episodes, `n_pass=2`, `n_flag=0`, and `n_reject=0`. This cuts the
-packed clips at the episode-table boundaries and writes local artifacts and a manifest
-without network calls. To validate just one episode from its separate camera files,
+With the current bundled format, expect two `rejected` episodes, `n_pass=0`,
+`n_flag=0`, and `n_reject=2`. Both contain the planted 9 A spike. This cuts the packed
+clips at the episode-table boundaries and writes local check reports without network
+calls. The reports also warn about the deliberately incorrect metadata start time.
+Rejected episodes are not added to the manifest; no uploads are planned.
+To validate just one episode from its separate camera files,
 use the `robot_episode_upload` call in [robot_examples.md](docs/robot_examples.md).
 
-#### 3. Retrieve both camera frames and named telemetry locally
+#### 3. Retrieve both camera frames and named telemetry locally (conditional)
+
+**Stop here for the unmodified negative fixtures.** On a fresh local store the rejected
+episodes above have no manifest entry, so this call returns `episode_not_available`.
+The example below describes retrieval only if `ep_demo1` already has a validated
+manifest entry from a separately prepared fixture. Keep any corrected test copies and
+their provenance separate; do not relax limits merely to hide a defect or overwrite the
+committed negative samples. A pre-existing entry is not proof that this run validated it.
 
 ```json
 {
@@ -242,23 +331,28 @@ integers. Capture times use 29.95 fps while encoded clips use 30 fps, so always 
 through the frame map. Preserve the configured `MCP_ROBOT_DIR` and local clips for later
 retrieval; Phase A telemetry and maps remain local.
 
-#### 4. Upload, index and search through the connected assistant
+#### 4. Upload, index and search through the connected assistant (conditional)
 
-For a network demo, configure `api_key` and repeat the dataset upload with
-`dry_run=false`, using one collection per dataset revision. Require `uploaded` status
+The unmodified bundled episodes are rejected with `dry_run=false` too; an API key
+does not bypass validation. Do not run the prompts below after the expected rejection.
+They apply only after separately prepared inputs have passed a dry run and the paths,
+collection and revision have been updated accordingly. For a network demo, configure
+`api_key` and use one collection per dataset revision. Require `uploaded` status
 before searching. Index jobs must run serially within a collection: call `index_create`
 for `cam_scene`, poll its returned job with `index_status` until it succeeds, then create
 and wait for the `cam_wrist` index. Do not start the second job while the first is
 running: the API returns HTTP 409. If a job fails, inspect its error before continuing. See the
 [configuration guide](docs/env_vars.md) and [live validation example](docs/live_api_validation.md).
 
-Paste these prompts in order after the local walkthrough. The search query describes
+For a validated synthetic copy only, adapt these prompts in order. The search query describes
 the actual test-pattern footage; semantic failure searches need real robot videos.
 
 ```text
-Upload the same data/robot/lerobot dataset to robot_demo, revision r1, with
-robot_dataset_upload and dry_run=false. Use data/robot/frame_map.parquet,
-data/robot/telemetry and data/robot/meta. Report each episode's upload status.
+Upload the separately prepared dataset that passed its dry run, using its reviewed
+paths, collection and revision with robot_dataset_upload and dry_run=false.
+Do not upload the unmodified data/robot negative fixtures. Report each episode's
+upload status; stop if any episode is rejected. Substitute the chosen collection
+and revision for robot_demo/r1 in the following prompts.
 Create the cam_scene image-embedding index and poll index_status until it succeeds.
 Only then create the cam_wrist index and wait for success. Run only one index job
 at a time in robot_demo; report any failure before proceeding to search.
@@ -294,7 +388,8 @@ Dry-run robot_episode_upload for ep_demo2 in robot_demo, revision r1. Use
 data/robot/ep_demo2/cam_scene.mp4, cam_wrist.mp4, telemetry.jsonl and frame_map.json,
 and data/robot/meta/ep_demo2.json. Show the check verdict and planned uploads.
 
-Retrieve ep_demo2 locally at the t_scene_ns of frame 15 in its frame_map.json.
+Only if ep_demo2 has a validated manifest entry, retrieve it locally at the
+t_scene_ns of frame 15 in its frame_map.json. Otherwise report episode_not_available.
 Compare its gripper and cmd_gripper values with ep_demo1 frame 15, using both
 camera views and 100 ms telemetry windows. Distinguish telemetry from visual evidence.
 

@@ -1,7 +1,7 @@
 """Frame-aligned (30 fps) state/action normalization stats and training-readiness checks for VLA datasets.
 
 usage (from the MCP package root):
-  .venv/bin/python skills/vmodal-robot-norm-stats/scripts/norm_stats.py EPISODES_DIR OUT_DIR (--spec F | --format_id N@V)
+  .venv-robot/bin/python skills/vmodal-robot-norm-stats/scripts/norm_stats.py EPISODES_DIR OUT_DIR (--spec F | --format_id N@V)
       [--state q,gripper] [--action cmd_q,cmd_gripper] [--exclusions exclusions.json] [--export DIR]
 
 Per scene frame: state = nearest telemetry row in time; action = latest command at or before the frame

@@ -11,15 +11,15 @@ need `--yes`, and you pass it only after the user approves in this conversation.
 1. **Gates first:** **vmodal-robot-qc-batch** report for this exact collection + dataset_rev;
    **vmodal-robot-failure-screen** `exclusions.json` from a human review; a bound format
    (approved via **vmodal-robot-format-review**; the plan warns when `checked_by` is not a person).
-2. **Plan (offline):** `.venv/bin/python $S plan COLLECTION EPISODES_DIR DATASET_REV OUT_DIR --qc QC/qc_report.json --exclusions exclusions.json`
+2. **Plan (offline):** `.venv-robot/bin/python $S plan COLLECTION EPISODES_DIR DATASET_REV OUT_DIR --qc QC/qc_report.json --exclusions exclusions.json`
    Show the user: count to upload, MB, blocked episodes with reasons, format approval state.
-3. **Canary (after approval):** `.venv/bin/python $S canary <COLLECTION>_canary EPISODES_DIR DATASET_REV OUT_DIR --uid <smallest passing uid> --yes`
+3. **Canary (after approval):** `.venv-robot/bin/python $S canary <COLLECTION>_canary EPISODES_DIR DATASET_REV OUT_DIR --uid <smallest passing uid> --yes`
    It must report `uploaded` (or `skipped` when already there) and list `cam_scene`/`cam_wrist`.
    Use the measured seconds to estimate the full run.
-4. **Run (after explicit go-ahead on the plan):** `.venv/bin/python $S run COLLECTION EPISODES_DIR DATASET_REV OUT_DIR --plan OUT_DIR/upload_plan.json --yes`
+4. **Run (after explicit go-ahead on the plan):** `.venv-robot/bin/python $S run COLLECTION EPISODES_DIR DATASET_REV OUT_DIR --plan OUT_DIR/upload_plan.json --yes`
    It refuses if any input changed since the plan. It stops after 3 consecutive failures; re-running
    the same command resumes, and identical uploaded episodes are `skipped`.
-5. **Verify:** `.venv/bin/python $S verify COLLECTION OUT_DIR` → manifest status counts vs. server
+5. **Verify:** `.venv-robot/bin/python $S verify COLLECTION OUT_DIR` → manifest status counts vs. server
    collection, sub-collections and index versions. `partial` episodes mean run again.
 6. **Index + smoke test (MCP tools):** per camera, `index_create(mode="vid_file", group_name=COLLECTION,
    stream_name="cam_scene" | "cam_wrist", index_type="vid_img_emb", modality="vid_img_emb",

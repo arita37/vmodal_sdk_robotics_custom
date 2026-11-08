@@ -16,6 +16,9 @@ from src.mcp_server.utils import (RobotError, os_robot_root, os_json_read, os_js
     os_rows_read, str_json_sha, str_robot_key, os_video_probe)
 
 
+from src.mcp_server.robot_diagnostics import current_warnings
+
+
 def spec_validate(spec):
     if not isinstance(spec,dict):
         raise RobotError("spec must be a JSON object")
@@ -245,10 +248,11 @@ def telemetry_check(spec, header, rows, frames=None, video_paths=None, length=No
     if frame_mode and [r.get("frame_index") for r in rows if isinstance(r,dict)] != list(range(len(frames) if frames is not None else len(rows))):
         file["errors"].append("frame_index: expected one row per frame, contiguous from 0")
     report = {"format_id": spec["format_id"], "format_version": spec["format_version"], "format_sha256": str_json_sha(spec),
-              "file": file, "time": {}, "video": {}, "align": {}, "errors": list(file["errors"]), "warnings": [], "frame_index": []}
+              "file": file, "time": {}, "video": {}, "align": {}, "errors": list(file["errors"]), "warnings": current_warnings(spec, rows), "frame_index": []}
     fatal = bool(file["errors"])
     if frame_mode and not fatal and any(key not in r for r in rows):
-        report.update(verdict="pass",time={"mode":"frame","requires_frame_map":True},warnings=["time alignment requires a frame map"])
+        report.update(verdict="pass",time={"mode":"frame","requires_frame_map":True})
+        report["warnings"].append("time alignment requires a frame map")
         return report
     if not fatal:
         times = [r[spec["time"]["field"]] for r in rows]

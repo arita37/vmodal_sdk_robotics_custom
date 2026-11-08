@@ -9,9 +9,12 @@ episodes, each with its evidence and a contact sheet.
 
 ## Steps
 1. From the MCP package root:
-   `.venv/bin/python skills/vmodal-robot-failure-screen/scripts/failure_screen.py screen EPISODES_DIR OUT_DIR [--thresholds robot.json]`
+   `.venv-robot/bin/python skills/vmodal-robot-failure-screen/scripts/failure_screen.py screen EPISODES_DIR OUT_DIR [--thresholds robot.json]`
    Field names default to `cmd_gripper`, `gripper`, `ee_pos`; override them and any limit in the thresholds JSON.
-   Gripper polarity is inferred from the data and printed. If it contradicts the format's unit
+   Gripper state polarity is inferred only from informative open-to-close transitions and printed.
+   If none are present, directional checks are skipped; set `state_polarity` to `1`
+   (state increases when closing) or `-1` (decreases) in thresholds when known.
+   The close command is still defined by `cmd_gripper > cmd_close_above`. If it contradicts the format's unit
    label, raise it (see **vmodal-robot-format-review**).
 2. Open the PNGs in `OUT_DIR/contact_sheets/` (scene camera at 0/25/50/75/100%) and describe
    what each shows. That visual check is what turns a candidate into a finding.
@@ -30,7 +33,8 @@ episodes, each with its evidence and a contact sheet.
 |---|---|---|
 | too_short / no_close_command / gripper_did_not_close / low_motion | high | likely not a valid demo |
 | slow_or_stuck_release | medium | release slower than max(1 s, 3× collection median): stuck gripper or a retry inside the demo |
-| closed_further_than_peers | medium | possible empty grasp |
+| closed_further_than_peers | medium | sustained closure exceeds the other episodes: possible empty grasp, usable with one peer |
+| opens_while_commanded_closed | medium | sustained opening during an uninterrupted close command: possible drop |
 | not_released / mostly_idle / end_pose_outlier | medium | ending or pacing unlike peers |
 | duration_outlier | low | long or short but otherwise normal; usually keep |
 
@@ -38,3 +42,12 @@ episodes, each with its evidence and a contact sheet.
   episodes are never deleted.
 - A demo with a recovery (e.g. a stuck release, then a regrasp) can be valuable training
   data. Keep or exclude it is the reviewer's call, so present it neutrally.
+
+- `gripper_did_not_close` requires an observed open-command period before closing;
+  recordings that start already holding do not establish a failed close.
+- Opening detection requires a held reference and opening to persist for `opening_hold_s`
+  (default 0.1 s), with a change of at least `state_delta` (default 0.05). It resets on release.
+- Peer closure uses the most-closed sustained state, comparing against the other episodes
+  with a minimum `state_delta` gap and `grip_width_z` times their robust spread. Failed
+  close transitions are excluded from this baseline. One peer provides weak comparative
+  evidence, not proof of an empty grasp; mixed tasks or gripper scales need separate runs.

@@ -25,6 +25,12 @@ def robot_fake_case(name, register=True):
     shutil.copytree("data/robot",root/"input")
     cfg = SimpleNamespace(robot_dir=str((root/"store").resolve()),image_dir=str((root/"images").resolve()),upload_max_mb=5120)
     spec_path = root/"input"/"xarm6_gripper_100hz.format.json"
+    # Plumbing tests intentionally accept the planted spike; diagnostics tests
+    # register the unmodified fixture to exercise its stricter current bound.
+    from src.mcp_server.utils import os_json_write
+    spec = os_json_read(spec_path)
+    next(f for f in spec["fields"] if f["name"] == "current")["range"] = [-10, 10]
+    os_json_write(spec_path, spec)
     if register:
         update_json_format_specs_from_file(cfg,str(spec_path),"demo")
     uid = "ep_demo1"

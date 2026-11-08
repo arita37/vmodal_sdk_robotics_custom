@@ -9,7 +9,7 @@ Agent skills for working with VModal. Each folder is one skill (`SKILL.md` + hel
 
 ### Robot data preparation (VLA training)
 
-Run in this order; each step's output gates the next. All scripts run from the MCP package root with `.venv/bin/python`.
+Run in this order; each step's output gates the next. All scripts run from the MCP package root with `.venv-robot/bin/python`.
 
 | Skill | What it does |
 |---|---|

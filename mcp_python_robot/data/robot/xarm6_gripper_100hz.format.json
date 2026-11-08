@@ -36,12 +36,16 @@
         "j5",
         "j6"
       ],
-      "note": "controller estimate",
+      "note": "Synthetic fixture bound only: nominal 0.1\u20130.3 A, planted 9 A spike must fail. Not a robot safety rating.",
       "required": true,
       "shape": [
         6
       ],
-      "unit": "A"
+      "unit": "A",
+      "range": [
+        -1,
+        1
+      ]
     },
     {
       "dtype": "float",

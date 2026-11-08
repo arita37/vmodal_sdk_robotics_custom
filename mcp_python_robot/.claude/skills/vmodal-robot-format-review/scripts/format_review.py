@@ -1,7 +1,7 @@
 """Review a telemetry format spec (registered, drafted, or with '?' placeholders) against real episodes.
 
 usage (from the MCP package root):
-  .venv/bin/python skills/vmodal-robot-format-review/scripts/format_review.py SPEC_JSON EPISODES_DIR OUT_DIR
+  .venv-robot/bin/python skills/vmodal-robot-format-review/scripts/format_review.py SPEC_JSON EPISODES_DIR OUT_DIR
 
 SPEC_JSON: a spec file (e.g. from MCP telemetry_format_draft_from_file, or MCP_ROBOT_DIR/formats/<id>/v<N>.json).
 Writes OUT_DIR/format_review.md (findings with evidence) and OUT_DIR/<format_id>.v<N+1>.draft.json
@@ -11,11 +11,17 @@ import argparse, copy, json, math, sys
 from pathlib import Path
 import numpy as np
 
+# Resolve both the canonical skills/ and installed .claude/skills/ layouts.
+ROOT = next(p for p in Path(__file__).resolve().parents if (p / "src/mcp_server").is_dir())
+sys.path.insert(0, str(ROOT))
+from src.mcp_server.robot_diagnostics import current_warnings, metadata_start_time_warnings
+
 SEV = {"error": 0, "warn": 1, "info": 2}
 
 
 def load_rows(path):
-    rows = [json.loads(l) for l in open(path) if l.strip()]
+    with open(path) as stream:
+        rows = [json.loads(l) for l in stream if l.strip()]
     return [r for r in rows if "t_ns" in r]  # drop an optional header line
 
 
@@ -29,7 +35,61 @@ def arr(rows, name):
 
 def nice_range(lo, hi, margin=0.1):
     span = max(hi - lo, 1e-6)
-    return [round(lo - margin * span, 4), round(hi + margin * span, 4)]
+    lower, upper = lo - margin * span, hi + margin * span
+    # Keep display-friendly bounds only when rounding still encloses the sample.
+    # Narrow spans can otherwise collapse or round an observed endpoint away.
+    lower = lower if math.isfinite(lower) else lo
+    upper = upper if math.isfinite(upper) else hi
+    rounded_lower, rounded_upper = round(lower, 4), round(upper, 4)
+    return [rounded_lower if rounded_lower <= lo else lower,
+            rounded_upper if rounded_upper >= hi else upper]
+
+
+def load_header(path):
+    """Return metadata only; header declarations are candidates, never approval."""
+    with open(path) as stream:
+        for line in stream:
+            if line.strip():
+                row = json.loads(line)
+                return row if "t_ns" not in row else {}
+    return {}
+
+
+def valid_range(value):
+    return (isinstance(value, list) and len(value) == 2
+            and all(isinstance(x, (int, float)) and not isinstance(x, bool)
+                    and math.isfinite(x) for x in value) and value[0] < value[1])
+
+
+def range_proposal(field, values, headers):
+    """Prefer explicit limits; a stationary sample cannot establish operating limits."""
+    unit = field.get("unit")
+    normalized = unit in ("0_open_1_closed", "0_closed_1_open",
+                          "normalized_grip_pos_0_open", "normalized_grip_pos_0_closed")
+    candidates = []
+    for header in headers:
+        for entry in header.get("fields", []):
+            if entry.get("name") != field["name"] or entry.get("range") in (None, "?"):
+                continue
+            if (unit in (None, "?") or entry.get("unit") != unit
+                    or entry.get("shape") != field.get("shape")
+                    or entry.get("names") != field.get("names")
+                    or not valid_range(entry["range"])):
+                return None, "header range has invalid limits or incompatible units/shape; confirm with the data owner"
+            candidates.append(entry["range"])
+    if candidates:
+        if any(r != candidates[0] for r in candidates[1:]):
+            return None, "header ranges conflict across episodes; confirm with the data owner"
+        if normalized and candidates[0] != [0, 1]:
+            return None, "header range conflicts with normalized physical limits [0, 1]; confirm with the data owner"
+        return candidates[0], "declared header limits (requires human review)"
+    if normalized:
+        return [0, 1], "physical limits of the declared normalized unit; no margin"
+    if field["name"] == "current":
+        return None, "current samples cannot establish physical limits; supply documented limits (outliers must not widen the range)"
+    if np.any(np.ptp(values, axis=0) <= 1e-6):
+        return None, "constant or near-constant component; sample cannot establish operating limits; supply documented physical limits"
+    return nice_range(float(values.min()), float(values.max())), "observed sample plus 10% margin; not verified physical limits"
 
 
 def lag_ms(t_ns, cmd, state, max_lag=40):
@@ -52,10 +112,33 @@ def main(a):
     spec = json.loads(Path(a.spec).read_text())
     eps = sorted(p for p in Path(a.episodes_dir).iterdir() if (p / "telemetry.jsonl").exists())
     data = {p.name: load_rows(p / "telemetry.jsonl") for p in eps}
+    headers = [load_header(p / "telemetry.jsonl") for p in eps]
     find, new = [], copy.deepcopy(spec)
     add = lambda sev, field, msg, fix="": find.append({"sev": sev, "field": field, "msg": msg, "fix": fix})
     fields = {f["name"]: f for f in spec["fields"]}
     newf = {f["name"]: f for f in new["fields"]}
+
+    # --- repeatable advisory diagnostics, independent of assistant interpretation
+    for ep in eps:
+        rows = data[ep.name]
+        for warning in current_warnings(spec, rows):
+            add("warn", "current", f"{ep.name}: {warning}", "review current trace and documented limits; do not infer a safety rating")
+        # Support episode-local metadata and the bundled data/robot/meta/<uid>.json.
+        paths = [ep / "meta.json", ep.parent / "meta" / f"{ep.name}.json"]
+        present = [p for p in paths if p.is_file()]
+        if not present:
+            add("warn", "meta.start_time", f"{ep.name}: metadata unavailable; start-time comparison not performed")
+        for path in present:
+            label = "meta.json" if path.parent == ep else f"meta/{ep.name}.json"
+            try:
+                meta = json.loads(path.read_text())
+                if not isinstance(meta, dict):
+                    raise ValueError("metadata must be an object")
+            except (ValueError, OSError):
+                add("warn", "meta.start_time", f"{ep.name} ({label}): metadata unreadable or not an object; comparison not performed")
+                continue
+            for warning in metadata_start_time_warnings(spec, rows, meta):
+                add("warn", "meta.start_time", f"{ep.name} ({label}): {warning}", "verify metadata and the declared clock; never guess an epoch")
 
     # --- columns present vs spec
     seen = set().union(*[set(r[0]) for r in data.values() if r]) - {"t_ns", "frame_index"}
@@ -106,12 +189,22 @@ def main(a):
         if n_nan:
             add("error", name, f"{n_nan} non-finite values", "vmodal-robot-telemetry-repair (short runs) or drop episodes")
         fin = allv[np.isfinite(allv).all(1)]
+        if not len(fin):
+            add("warn", name, "no fully finite samples; range cannot be inferred", "supply documented physical limits")
+            continue
         lo, hi = float(fin.min()), float(fin.max())
         rng = f.get("range")
         if rng in (None, "?"):
             if rng == "?":
-                newf[name]["range"] = nice_range(lo, hi)
-                add("info", name, f"range undefined; observed [{lo:.4g}, {hi:.4g}]", f"range={newf[name]['range']} (or physical limits)")
+                proposal, reason = range_proposal(f, fin, headers)
+                if proposal is None:
+                    add("warn", name, f"range left unresolved; observed [{lo:.4g}, {hi:.4g}]; {reason}")
+                else:
+                    newf[name]["range"] = proposal
+                    add("info", name, f"range undefined; observed [{lo:.4g}, {hi:.4g}]", f"range={proposal}: {reason}")
+                    out = int(((fin < proposal[0]) | (fin > proposal[1])).sum())
+                    if out:
+                        add("error", name, f"{out} values outside proposed declared limits {proposal}", "fix data or confirm units/limits; do not widen limits to fit samples")
         else:
             out = int(((fin < rng[0]) | (fin > rng[1])).sum())
             if out:
@@ -195,12 +288,16 @@ def main(a):
                 yield from holes(v, f"{p}[{i}]")
         elif o == "?":
             yield p
-    left = [h for h in holes(new) if h not in ("checked_by", "checked_at")]
-    if left:
-        add("warn", "placeholders", f"{len(left)} values still '?' in the suggested draft: {', '.join(left)}", "a human must fill these")
-
     new["format_version"] = int(spec.get("format_version", 0) or 0) + 1 if spec.get("checked_by") not in (None, "?") else spec.get("format_version", 1)
     new["checked_by"], new["checked_at"] = "?", "?"
+    all_holes = sorted(holes(new))
+    sign_off = [h for h in all_holes if h in ("checked_by", "checked_at")]
+    unresolved = [h for h in all_holes if h not in sign_off]
+    add("warn" if unresolved else "info", "placeholders",
+        f"{len(all_holes)} total '?' values in the written draft: "
+        f"{len(unresolved)} unresolved data/policy values ({', '.join(unresolved) or 'none'}); "
+        f"{len(sign_off)} required human sign-off values ({', '.join(sign_off)})",
+        "a human must fill these; proposed values are not approval")
     out = Path(a.out_dir); out.mkdir(parents=True, exist_ok=True)
     fid = spec.get("format_id") if spec.get("format_id") not in (None, "?") else "new_format"
     draft = out / f"{fid}.v{new['format_version']}.draft.json"
@@ -211,7 +308,7 @@ def main(a):
           f"{sum(x['sev'] == 'error' for x in find)} errors, {sum(x['sev'] == 'warn' for x in find)} warnings.", "",
           "| severity | field | finding | suggested fix |", "|---|---|---|---|"]
     md += [f"| {x['sev']} | {x['field']} | {x['msg']} | {x['fix']} |" for x in find]
-    md += ["", f"Suggested draft: `{draft}` (checked_by='?'; a human reviews, fills, then registers with "
+    md += ["", f"Suggested draft: `{draft.name}` (checked_by='?'; a human reviews, fills, then registers with "
            "`update_json_format_specs_from_file`, bumping format_version — registered versions are immutable)."]
     (out / "format_review.md").write_text("\n".join(md) + "\n")
     for x in find:
